@@ -16,6 +16,7 @@ class Directory extends React.Component {
                     title: 'hats',
                     imageUrl: 'https://i.ibb.co/cvpntL1/hats.png',
                     id: 1,
+                    // The linkURL allows dynamic routing
                     linkUrl: 'shop/hats'
                 },
                 {
@@ -57,12 +58,13 @@ class Directory extends React.Component {
                     // We want to map over our array and render the 
                     // MenuItem. We also want to destructure the
                     // props and pass in the relevant ones
-                    this.state.sections.map(({title, imageUrl, id, size}) => (
+                    // As the majority of props at the same as the arguments
+                    // that we are passing into the MenuItem component, we can
+                    // use the spread operator to pass them in at once
+                    this.state.sections.map(({ id, ...otherSectionProps }) => (
                         <MenuItem
                             key={id}
-                            title={title}
-                            imageUrl={imageUrl}
-                            size={size}
+                            { ...otherSectionProps }
                         />
                     ))
                 }

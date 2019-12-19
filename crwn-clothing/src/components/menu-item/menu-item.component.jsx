@@ -1,7 +1,8 @@
 import React from 'react';
 // Import style sheet
 import './menu-item.styles.scss';
-// Import withRoute() to enable the avodiance of prop drilling
+// Import withRouter() to enable the avodiance of prop drilling
+import { withRouter } from 'react-router-dom';
 
 // We want to dynamically generate the title,
 // so we need to deconstruct it in the function parameters
@@ -12,8 +13,14 @@ import './menu-item.styles.scss';
 // if we change the root imageUrl
 // We also want to add the size to our className, if it
 // is present (in the raw json data)
-const MenuItem = ({ title, imageUrl, size }) => (
-    <div className={`${size} menu-item`}>
+// Once we pass in the linkUrl and history props, we can
+// give the menu-item div an onClick argument, which takes
+// a function to return the relevant URL
+const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
+    <div
+        className={`${size} menu-item`}
+        onClick={() => history.push(`${match.url}${linkUrl}`)}
+    >
         <div
             className='background-image'
             style={{ backgroundImage: `url(${ imageUrl })` }}>
@@ -25,4 +32,4 @@ const MenuItem = ({ title, imageUrl, size }) => (
     </div>
 );
 
-export default MenuItem;
+export default withRouter(MenuItem);
