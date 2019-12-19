@@ -1,6 +1,7 @@
 import React from 'react';
 // Import style sheet
 import './menu-item.styles.scss';
+// Import withRoute() to enable the avodiance of prop drilling
 
 // We want to dynamically generate the title,
 // so we need to deconstruct it in the function parameters
