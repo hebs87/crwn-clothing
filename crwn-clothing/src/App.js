@@ -11,7 +11,7 @@ import ShopPage from './pages/shop/shop.component'
 // Import Switch and Route to enable routing
 import { Switch, Route } from 'react-router-dom';
 // Import auth from firebase utiils
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends React.Component {
     constructor() {
@@ -31,9 +31,29 @@ class App extends React.Component {
     componentDidMount() {
         // The onAuthStateChanged is a method from our auth library
         // that enables us to set the session state to the user details
-        // It takes a function in which we set the state to the user
-        this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-            this.setState({ currentUser: user });
+        // It takes an async function in which we set the
+        // createUserProfileDocument param to the user object, if the
+        // userAuth exists
+        this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+            if (userAuth) {
+                const userRef = await createUserProfileDocument(userAuth);
+                
+                // Here, we call the onSnapshot method to get a snapshot
+                // of the user's data and we set the state to those details
+                // (the user's ID and the rest of the snapshot data)
+                userRef.onSnapshot(snapShot => {
+                    this.setState({
+                        currentUser: {
+                            id: snapShot.id,
+                            ...snapShot.data()
+                        }
+                    });
+                });
+            } else {
+                // If the user logs out, we set the state back to userAuth,
+                // which will be null
+                this.setState({ currentUser: userAuth })
+            }
         });
     }
 
