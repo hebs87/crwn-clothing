@@ -9,8 +9,11 @@ import './custom-button.styles.scss';
 // ...otherProps so that we can give the button a type
 // of submit, which will ensure that the form's
 // onSubmit function will be triggered when pressed
-const CustomButton = ({ children, ...otherProps }) => (
-    <button className='custom-button' { ...otherProps } >
+// We pass in the isGoogleSignIn prop to our button,
+// so if it is the Google Sign In button, we add the
+// google-sign-in class
+const CustomButton = ({ children, isGoogleSignIn, ...otherProps }) => (
+    <button className={`${isGoogleSignIn ? 'google-sign-in' : ''} custom-button`} { ...otherProps } >
         { children }
     </button>
 );
