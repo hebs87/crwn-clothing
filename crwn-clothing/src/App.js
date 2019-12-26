@@ -52,7 +52,7 @@ class App extends React.Component {
             } else {
                 // If the user logs out, we set the state back to userAuth,
                 // which will be null
-                this.setState({ currentUser: userAuth })
+                this.setState({ currentUser: userAuth });
             }
         });
     }

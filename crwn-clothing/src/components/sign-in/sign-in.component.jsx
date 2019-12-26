@@ -4,7 +4,7 @@ import FormInput from '../form-input/form-input.component'
 // Import CustomButton
 import CustomButton from '../custom-button/custom-button.component'
 // Import signInWithGoogle
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 // Import style sheet
 import './sign-in.styles.scss';
 
@@ -22,11 +22,23 @@ class SignIn extends React.Component {
     // so we use preventDefault to stop this and specify
     // what needs to be done
     // We then pass this in to the form onSubmit attribute
-    handleSubmit = event => {
+    handleSubmit = async event => {
         event.preventDefault();
 
-        this.setState({ email: '', password: '' })
-    }
+        // We need to destructure our email and password from
+        // the state, so that we can use the auth's
+        // signInWithEmailAndPassword method to varify the
+        // details. If they are correct, we sign the user in
+        const { email, password } = this.state;
+
+        try {
+            // Sign the user in if successful and then clear state
+            await auth.signInWithEmailAndPassword(email, password);
+            this.setState({ email: '', password: '' });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     // When there is a change to the form fields, we want
     // to pull the input field's name and value - the target
