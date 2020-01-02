@@ -26,7 +26,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         // The default value will be our previous state
         // if the type doesn't match the reducer's congfig
         default:
-            state;
+            return state;
     }
 };
 

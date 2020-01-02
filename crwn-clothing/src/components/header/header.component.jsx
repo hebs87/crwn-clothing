@@ -1,4 +1,6 @@
 import React from 'react';
+// Import connect to enable access to reducer
+import { connect } from 'react-redux';
 // Import Link from react-router-dom for the nav links
 import { Link } from 'react-router-dom';
 // Import auth from firebase utils for user authentication
@@ -33,4 +35,14 @@ const Header = ({ currentUser }) => (
     </div>
 )
 
-export default Header;
+// mapStateToProps is the function that we create to allow the
+// component to directly access the reducer props
+// The state parameter is the root reducer
+const matStateToProps = state => ({
+    // State is the root reducer object, user is the property
+    // which refers to the userReducer, currentUser is the
+    // property in the currentUser that has a default of null
+    currentUser: state.user.currentUser
+})
+
+export default connect(matStateToProps)(Header);
