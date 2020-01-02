@@ -38,11 +38,11 @@ const Header = ({ currentUser }) => (
 // mapStateToProps is the function that we create to allow the
 // component to directly access the reducer props
 // The state parameter is the root reducer
-const matStateToProps = state => ({
+const mapStateToProps = state => ({
     // State is the root reducer object, user is the property
     // which refers to the userReducer, currentUser is the
     // property in the currentUser that has a default of null
     currentUser: state.user.currentUser
 })
 
-export default connect(matStateToProps)(Header);
+export default connect(mapStateToProps)(Header);
