@@ -1,14 +1,16 @@
 import React from 'react';
-// Import connect to enable access to reducer
-import { connect } from 'react-redux';
 // Import Link from react-router-dom for the nav links
 import { Link } from 'react-router-dom';
+// Import connect to enable access to reducer
+import { connect } from 'react-redux';
 // Import auth from firebase utils for user authentication
 import { auth } from '../../firebase/firebase.utils'
-// Import style sheet
-import './header.styles.scss';
+// Import the CartItem component
+import CartIcon from '../cart-icon/cart-icon.component';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
+// Import style sheet
+import './header.styles.scss';
 
 const Header = ({ currentUser }) => (
     <div className='header'>
@@ -31,6 +33,7 @@ const Header = ({ currentUser }) => (
                 // Else, we want to display the link to take us to the signin page
                 (<Link className='option' to='/signin'>SIGN IN</Link>)
             }
+            <CartIcon />
         </div>
     </div>
 )
