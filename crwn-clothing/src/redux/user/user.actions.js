@@ -1,3 +1,6 @@
+// Import the action type so we can set it as the case
+import { UserActionTypes } from './user.types';
+
 // setCurrentUser is our action which takes a user
 // parameter and is passed in to the reducer. The
 // user parameter is the value that we set our
@@ -7,6 +10,6 @@
 export const setCurrentUser = user => ({
     // The type needs to be the same string that the
     // reducer's switch statement is expecting
-    type: 'SET_CURRENT_USER',
+    type: UserActionTypes.SET_CURRENT_USER,
     payload: user
 });

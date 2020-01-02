@@ -1,3 +1,6 @@
+// Import the action type so we can set it as the case
+import { UserActionTypes } from './user.types';
+
 // We want to set our default state here, which
 // will be passed into the reducer as the default
 // This was what we initially set in the App.js
@@ -11,7 +14,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     // Use a switch statement to check the action.type
     switch(action.type) {
         // If the type is SET_CURRENT_USER
-        case 'SET_CURRENT_USER':
+        case UserActionTypes.SET_CURRENT_USER:
             // We return a new object where we spread in
             // the state, and we update the
             // currentUser property valie to the payload
