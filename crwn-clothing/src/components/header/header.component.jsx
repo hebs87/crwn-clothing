@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { auth } from '../../firebase/firebase.utils'
 // Import the CartItem component
 import CartIcon from '../cart-icon/cart-icon.component';
+// Import the CartDropdown component
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 // Import style sheet
@@ -35,6 +37,7 @@ const Header = ({ currentUser }) => (
             }
             <CartIcon />
         </div>
+        <CartDropdown />
     </div>
 )
 
