@@ -2,7 +2,10 @@
 import CartActionTypes from './cart.types';
 
 const INITIAL_STATE = {
-    hidden: true
+    // For the CartDropdown toggle feature
+    hidden: true,
+    // For adding items to our cart (initial empty cart)
+    cartItems: []
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
@@ -17,7 +20,12 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 // toggle and change the state to the
                 // opposite when clicked
                 hidden: !state.hidden
-            }
+            };
+        case CartActionTypes.ADD_ITEM:
+            return {
+                ...state,
+                cartItems: [...state.cartItems, action.payload]
+            };
         default:
             return state;
     }
