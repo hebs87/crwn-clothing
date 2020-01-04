@@ -3,7 +3,10 @@
 import { combineReducers } from 'redux';
 // Import userReducer
 import userReducer from './user/user.reducer';
+// Import cartReducer
+import cartReducer from './cart/cart.reducer';
 
 export default combineReducers({
-    user: userReducer
-})
+    user: userReducer,
+    cart: cartReducer
+});

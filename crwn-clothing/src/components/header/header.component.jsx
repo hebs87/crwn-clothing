@@ -14,7 +14,7 @@ import { ReactComponent as Logo } from '../../assets/crown.svg';
 // Import style sheet
 import './header.styles.scss';
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to='/'>
             <Logo className='logo' />
@@ -40,18 +40,22 @@ const Header = ({ currentUser }) => (
             }
             <CartIcon />
         </div>
-        <CartDropdown />
+        {
+            hidden ? null : <CartDropdown />
+        }
     </div>
-)
+);
 
 // mapStateToProps is the function that we create to allow the
-// component to directly access the reducer props
-// The state parameter is the root reducer
-const mapStateToProps = state => ({
-    // State is the root reducer object, user is the property
-    // which refers to the userReducer, currentUser is the
-    // property in the currentUser that has a default of null
-    currentUser: state.user.currentUser
-})
+// component to directly access the root reducer props
+// Here, we want to destructure our nested values from the
+// root reducer...
+// We get the currentUser value which is nested in the
+// user property of the root reducer, likewise with the hidden
+const mapStateToProps = ({ user: {currentUser}, cart: { hidden } }) => ({
+    // We want to return both values as props here
+    currentUser,
+    hidden
+});
 
 export default connect(mapStateToProps)(Header);
