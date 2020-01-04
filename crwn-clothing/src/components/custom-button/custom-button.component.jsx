@@ -12,8 +12,16 @@ import './custom-button.styles.scss';
 // We pass in the isGoogleSignIn prop to our button,
 // so if it is the Google Sign In button, we add the
 // google-sign-in class
-const CustomButton = ({ children, isGoogleSignIn, ...otherProps }) => (
-    <button className={`${isGoogleSignIn ? 'google-sign-in' : ''} custom-button`} { ...otherProps } >
+// We pass in the inverted prop to our button,
+// so if it is the Add To Cart button, we add the
+// inverted class
+const CustomButton = ({ children, isGoogleSignIn, inverted, ...otherProps }) => (
+    <button
+        className={
+            `${inverted ? 'inverted' : ''}
+            ${isGoogleSignIn ? 'google-sign-in' : ''}
+            custom-button`
+        } { ...otherProps } >
         { children }
     </button>
 );
