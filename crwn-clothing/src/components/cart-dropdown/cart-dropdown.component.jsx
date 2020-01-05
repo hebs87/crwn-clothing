@@ -11,12 +11,18 @@ import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
 // Import selectCartItems selector to pass in to mapStateToProps
 import { selectCartItems } from '../../redux/cart/cart.selectors';
+// Import toggleCartHidden action to enable toggling the cart to hide
+// when clicking the GO TO CHECKOUT BUTTON
+import { toggleCartHidden } from '../../redux/cart/cart.actions'
 // Import style sheet
 import './cart-dropdown.styles.scss';
 
 // We destructure our cartIems so we can pass
 // it into our CartItem component
-const CartDropdown = ({ cartItems, history }) => (
+// We pass in history to enable routing to checkout page
+// We pass in dispatch to enable passsing the toggle
+// CartDropdown feature to the Button
+const CartDropdown = ({ cartItems, history, dispatch }) => (
     <div className='cart-dropdown'>
         <div className='cart-items'>
             {
@@ -38,7 +44,13 @@ const CartDropdown = ({ cartItems, history }) => (
             }
         </div>
         <CustomButton
-            onClick={() => history.push('/checkout')}
+            onClick={() => {
+                // Route to the checkout route
+                history.push('/checkout');
+                // Dispatch the toggleCartHidden action to
+                // toggle the cart to hidden
+                dispatch(toggleCartHidden());
+            }}
         >
             GO TO CHECKOUT
         </CustomButton>
