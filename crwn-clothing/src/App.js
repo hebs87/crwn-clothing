@@ -3,6 +3,8 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 // Import connect to enable the app to access redux
 import { connect } from 'react-redux';
+// Import createStructured selector to allow multiple selector calls
+import { createStructuredSelector } from 'reselect';
 
 import './App.css';
 
@@ -18,6 +20,8 @@ import Header from './components/header/header.component'
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 // Import setCurrentUser action to enable us to set currentUser
 import { setCurrentUser } from './redux/user/user.actions';
+// Import selectors to pass into mapStateToProps
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 class App extends React.Component {
     // We set the initial unsibscribeFromAuth value to null
@@ -83,13 +87,9 @@ class App extends React.Component {
 
 // FOR REDIRECTING THE USER TO HOME PAGE IF SIGNED IN
 // We want to get our redux user state
-// We need to destructure our user reducer from the
-// state and return our currentUser prop, which is
-// equal to user.currentUser (from the user reducer)
-// This can then be passed in to our connect method
-const mapStateToProps = ({ user }) => ({
-    currentUser: user.currentUser
-})
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+});
 
 // The mapDispatchToProps function takes the dispatch property
 // and returns an object where the prop name will be whatever

@@ -3,12 +3,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // Import connect to enable access to reducer
 import { connect } from 'react-redux';
+// Import createStructured selector to allow multiple selector calls
+import { createStructuredSelector } from 'reselect';
 // Import auth from firebase utils for user authentication
 import { auth } from '../../firebase/firebase.utils'
 // Import the CartItem component
 import CartIcon from '../cart-icon/cart-icon.component';
 // Import the CartDropdown component
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+// Import selectors to pass into mapStateToProps
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 // Import style sheet
@@ -48,14 +53,12 @@ const Header = ({ currentUser, hidden }) => (
 
 // mapStateToProps is the function that we create to allow the
 // component to directly access the root reducer props
-// Here, we want to destructure our nested values from the
-// root reducer...
-// We get the currentUser value which is nested in the
-// user property of the root reducer, likewise with the hidden
-const mapStateToProps = ({ user: {currentUser}, cart: { hidden } }) => ({
+// We use createStructuredSelector to automatically pass in
+// the top level state to our selector calls
+const mapStateToProps = createStructuredSelector({
     // We want to return both values as props here
-    currentUser,
-    hidden
+    currentUser: selectCurrentUser,
+    hidden: selectCartHidden
 });
 
 export default connect(mapStateToProps)(Header);

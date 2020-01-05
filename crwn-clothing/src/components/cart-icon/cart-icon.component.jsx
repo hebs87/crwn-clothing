@@ -1,6 +1,8 @@
 import React from 'react';
 // Import connect to enable binding the reducer
 import { connect } from 'react-redux';
+// Import createStructured selector to allow multiple selector calls
+import { createStructuredSelector } from 'reselect';
 // Import toggleCartHidden action to enable toggling
 import { toggleCartHidden } from '../../redux/cart/cart.actions';
 // Import selectCartItemsCount selector to pass in to mapStateToProps
@@ -27,8 +29,8 @@ const CartIcon = ({ toggleCartHidden, itemCount }) => (
 // We create a mapStateToProps function to pull
 // the itemCount. We pass in the whole state
 // and the selector then gets the relevant part
-const mapStateToProps = state => ({
-    itemCount: selectCartItemsCount(state)
+const mapStateToProps = createStructuredSelector({
+    itemCount: selectCartItemsCount
 });
 
 // Allows toggling of cart dropdown
