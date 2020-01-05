@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Import createStructured selector to allow multiple selector calls
 import { createStructuredSelector } from 'reselect';
+// Import withRouter to enable button to route to CheckoutPage
+import { withRouter } from 'react-router-dom';
 // Import CustomButton
 import CustomButton from '../custom-button/custom-button.component';
 // Import CartItem
@@ -14,7 +16,7 @@ import './cart-dropdown.styles.scss';
 
 // We destructure our cartIems so we can pass
 // it into our CartItem component
-const CartDropdown = ({ cartItems }) => (
+const CartDropdown = ({ cartItems, history }) => (
     <div className='cart-dropdown'>
         <div className='cart-items'>
             {
@@ -35,7 +37,11 @@ const CartDropdown = ({ cartItems }) => (
                 )
             }
         </div>
-        <CustomButton>GO TO CHECKOUT</CustomButton>
+        <CustomButton
+            onClick={() => history.push('/checkout')}
+        >
+            GO TO CHECKOUT
+        </CustomButton>
     </div>
 );
 
@@ -46,4 +52,4 @@ const mapStateToProps = createStructuredSelector({
     cartItems: selectCartItems
 });
 
-export default connect(mapStateToProps)(CartDropdown);
+export default withRouter(connect(mapStateToProps)(CartDropdown));
