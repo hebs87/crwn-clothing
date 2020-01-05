@@ -28,6 +28,21 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 cartItems: addItemToCart(state.cartItems, action.payload)
             };
+        case CartActionTypes.CLEAR_ITEM_FROM_CART:
+            return {
+                ...state,
+                // We use a filter method, which returns everything
+                // that returns true
+                cartItems: state.cartItems.filter( cartItem =>
+                    // We compare the cartItem.id to the
+                    // action.payload.id. If the IDs don't match,
+                    // it returns true and those items remain in
+                    // the cart. This causes a new object to be
+                    // returned that contains all the cartItems
+                    // that haven't been removed
+                    cartItem.id !== action.payload.id
+                )
+            };
         default:
             return state;
     }
