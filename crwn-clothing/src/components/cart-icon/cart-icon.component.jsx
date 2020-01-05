@@ -12,21 +12,42 @@ import './cart-icon.styles.scss';
 // We need to pass in the toggleCartHidden prop
 // into it here, which will allow us to set it as
 // the cart-icon's onClick function
-const CartIcon = ({ toggleCartHidden }) => (
+// We pass in the itemCount from the mapStateToProps
+// function to enable displaying the total count in
+// the item-count span
+const CartIcon = ({ toggleCartHidden, itemCount }) => (
     <div className='cart-icon' onClick={toggleCartHidden}>
         <ShoppingIcon className='shopping-icon' />
-        <span className='item-count'>0</span>
+        <span className='item-count'>{ itemCount }</span>
     </div>
 );
+
+// We create a mapStateToProps function to pull
+// the cartItems state from the cart reducer
+const mapStateToProps = ({ cart: { cartItems } }) => ({
+    // We use the reduce function to loop over each
+    // of the items in our cartItems object and add
+    // them up.
+    // The reduce() takes an accumulator and item as
+    // its arguments and the number/value in the
+    // function specifies the initial value of the
+    // accumulator. Here, the initial value of the
+    // accumulator is 0, which gets added to the
+    // item quantity, then for the next iteration the
+    // accumulator value is the new total, and so on
+    // until all items are looped over and added
+    itemCount: cartItems.reduce(
+        (accumulatedQuantity, cartItem) =>
+            accumulatedQuantity + cartItem.quantity, 0
+    )
+});
 
 // Allows toggling of cart dropdown
 const mapDispatchToProps = dispatch => ({
     toggleCartHidden: () => dispatch(toggleCartHidden())
 });
 
-// Pass in null as the connect default and then the
-// mapDispatchToProps function as the 2nd argument
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(CartIcon);
