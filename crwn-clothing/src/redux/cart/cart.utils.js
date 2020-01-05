@@ -1,5 +1,3 @@
-import CartActionTypes from "./cart.types";
-
 // We pass in our existing cartItems array and also the
 // cartItemToAdd, because we want to compare their ID
 // to decide whether to increase the quantity if they are

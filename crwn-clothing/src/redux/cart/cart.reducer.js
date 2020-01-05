@@ -1,7 +1,7 @@
 // Import CartActionTypes
 import CartActionTypes from './cart.types';
 // Import addItemToCart
-import { addItemToCart } from './cart.utils';
+import { addItemToCart, removeItemFromCart } from './cart.utils';
 
 const INITIAL_STATE = {
     // For the CartDropdown toggle feature
@@ -31,7 +31,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         case CartActionTypes.REMOVE_ITEM:
             return {
                 ...state,
-                cartItems: 
+                cartItems: removeItemFromCart(state.cartItems, action.payload)
             }
         case CartActionTypes.CLEAR_ITEM_FROM_CART:
             return {
