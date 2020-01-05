@@ -32,11 +32,17 @@ const CheckoutPage = ({ cartItems, total }) => (
         {
             // Map over our cartItems and display them
             // in the CheckoutItem component
-            cartItems.map(cartItem =>
-                <CheckoutItem 
-                    key={cartItem.id}
-                    cartItem={cartItem}
-                />
+            cartItems.length ? (
+                cartItems.map(cartItem =>
+                    <CheckoutItem 
+                        key={cartItem.id}
+                        cartItem={cartItem}
+                    />
+                )
+            ) : (
+                <span className='empty-message'>
+                    Your cart is empty
+                </span>
             )
         }
         <div className='total'>TOTAL: &pound;{total}</div>
