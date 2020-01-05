@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import CustomButton from '../custom-button/custom-button.component';
 // Import CartItem
 import CartItem from '../cart-item/cart-item.component';
+// Import selectCartItems selector to pass in to mapStateToProps
+import { selectCartItems } from '../../redux/cart/cart.selectors';
 // Import style sheet
 import './cart-dropdown.styles.scss';
 
@@ -24,10 +26,11 @@ const CartDropdown = ({ cartItems }) => (
     </div>
 );
 
-// We destructure out cartItems from our cart and
-// return the prop
-const mapStateToProps = ({ cart: { cartItems } }) => ({
-    cartItems
+// We create a mapStateToProps function to pull
+// the cartItems. We pass in the whole state
+// and the selector then gets the relevant part
+const mapStateToProps = state => ({
+    cartItems: selectCartItems(state)
 });
 
 export default connect(mapStateToProps)(CartDropdown);

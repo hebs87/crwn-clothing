@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Import toggleCartHidden action to enable toggling
 import { toggleCartHidden } from '../../redux/cart/cart.actions';
+// Import selectCartItemsCount selector to pass in to mapStateToProps
+import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
 // Import shopping bag icon svg
 import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg';
 // Import style sheet
@@ -23,23 +25,10 @@ const CartIcon = ({ toggleCartHidden, itemCount }) => (
 );
 
 // We create a mapStateToProps function to pull
-// the cartItems state from the cart reducer
-const mapStateToProps = ({ cart: { cartItems } }) => ({
-    // We use the reduce function to loop over each
-    // of the items in our cartItems object and add
-    // them up.
-    // The reduce() takes an accumulator and item as
-    // its arguments and the number/value in the
-    // function specifies the initial value of the
-    // accumulator. Here, the initial value of the
-    // accumulator is 0, which gets added to the
-    // item quantity, then for the next iteration the
-    // accumulator value is the new total, and so on
-    // until all items are looped over and added
-    itemCount: cartItems.reduce(
-        (accumulatedQuantity, cartItem) =>
-            accumulatedQuantity + cartItem.quantity, 0
-    )
+// the itemCount. We pass in the whole state
+// and the selector then gets the relevant part
+const mapStateToProps = state => ({
+    itemCount: selectCartItemsCount(state)
 });
 
 // Allows toggling of cart dropdown
