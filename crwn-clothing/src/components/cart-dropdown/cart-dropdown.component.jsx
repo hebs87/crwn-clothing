@@ -18,9 +18,20 @@ const CartDropdown = ({ cartItems }) => (
     <div className='cart-dropdown'>
         <div className='cart-items'>
             {
-                // We map out our cartItems
-                cartItems.map(cartItem =>
-                    <CartItem key={ cartItem.id } item={ cartItem } />
+                // We need an if statement here so we
+                // conditionally render an 'empty' message
+                // if there are no cart items, or we render
+                // the cart items if there are any
+                cartItems.length ? (
+                    // We map out our cartItems
+                    cartItems.map(cartItem =>
+                        <CartItem key={ cartItem.id } item={ cartItem } />
+                    )
+                ) : (
+                    // We display a message if cart is empty
+                    <span className='empty-message'>
+                        Your cart is empty
+                    </span>
                 )
             }
         </div>
