@@ -1,3 +1,5 @@
+import CartActionTypes from "./cart.types";
+
 // We pass in our existing cartItems array and also the
 // cartItemToAdd, because we want to compare their ID
 // to decide whether to increase the quantity if they are
@@ -40,4 +42,37 @@ export const addItemToCart = (cartItems, cartItemToAdd) => {
     // and set its quantity to 1 - this enables the
     // quantity to be incremented
     return [...cartItems, {...cartItemToAdd, quantity: 1}]
+};
+
+export const removeItemFromCart = (cartItems, cartItemToRemove) => {
+    const existingCartItem = cartItems.find(
+        cartItem => cartItem.id === cartItemToRemove.id
+    );
+    
+    // If the existingCartItem's quantity is less than 1,
+    // we want to filter it out and return the other items
+    if (existingCartItem.quantity === 1) {
+        return cartItems.filter(cartItem =>
+            // If the cartItem.id matches the
+            // cartItemToRemove.id, we want to
+            // filter it out and only return the ones
+            // that don't match
+            cartItem.id !== cartItemToRemove.id
+        )
+    }
+
+    // If the quantity is more than 1, we want to map
+    // over the cartItems, compare the cartItem.id to
+    // the cartItemToRemove.id, and if it matches, we
+    // spread in the cart item in a new object, but
+    // decrease the quantity. If the IDs don't match,
+    // we just return our existing cart item. This
+    // ensures that only the matching ID it decreased
+    // and all others remain the same
+    return cartItems.map(cartItem =>
+        cartItem.id === cartItemToRemove.id ?
+        { ...cartItem, quantity: cartItem.quantity - 1 }
+        :
+        cartItem
+    );
 };

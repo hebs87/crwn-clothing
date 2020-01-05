@@ -19,7 +19,16 @@ export const addItem = item => ({
 });
 
 // We create a new action that allows us to
-// remove an item from the cart, regardless
+// remove a single item from the cart.
+// We get the item and then we pass it into
+// the payload as its value
+export const removeItem = item => ({
+    type: CartActionTypes.REMOVE_ITEM,
+    payload: item
+});
+
+// We create a new action that allows us to
+// clear an item from the cart, regardless
 // of its quantity. We get the item and
 // then we pass it into the payload as
 // its value
