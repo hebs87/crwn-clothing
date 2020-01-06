@@ -1,4 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
+// Import persistStore to allow our browser to cache the store
+import { persistStore } from 'redux-persist';
 // Import logger, which console logs the input of the
 // actions to help us better understand what is happening
 import logger from 'redux-logger';
@@ -15,6 +17,12 @@ const middlewares = [logger];
 // in our middlewares (we do it this way to make it more
 // scalable so that we don't have to pass in each
 // individual parameter)
-const store = createStore(rootReducer, applyMiddleware(...middlewares));
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
-export default store;
+// We want to create a persistor and pass in our store
+// to enable it to persist in either local or session storage
+export const persistor = persistStore(store);
+
+// Finally, we want to export an object that contains
+// our store and the persistor
+export default { store, persistor };
