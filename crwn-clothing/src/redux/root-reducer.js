@@ -13,6 +13,8 @@ import userReducer from './user/user.reducer';
 import cartReducer from './cart/cart.reducer';
 // Import directoryReducer
 import directoryReducer from './directory/directory.reducer';
+// Import shopReducer
+import shopReducer from './shop/shop.reducer';
 
 // We need to create a persistConfig, which is a
 // JSON object that contains the potential config
@@ -39,7 +41,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     user: userReducer,
     cart: cartReducer,
-    directory: directoryReducer
+    directory: directoryReducer,
+    shop: shopReducer
 });
 
 // Then we amend our export to export the persistReducer
