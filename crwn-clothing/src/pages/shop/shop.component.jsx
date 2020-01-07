@@ -3,6 +3,8 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 // Import CollectionOverview
 import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
+// Import CategoryPage
+import CategoryPage from '../category/category.component';
 
 // As the ShopPage is rendered with the route in App.js,
 // match is one of its props that ShopPage will have access
