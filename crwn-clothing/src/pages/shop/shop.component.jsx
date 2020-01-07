@@ -3,8 +3,8 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 // Import CollectionOverview
 import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
-// Import CategoryPage
-import CategoryPage from '../category/category.component';
+// Import CollectionPage
+import CollectionPage from '../collection/collection.component';
 
 // As the ShopPage is rendered with the route in App.js,
 // match is one of its props that ShopPage will have access
@@ -13,11 +13,11 @@ import CategoryPage from '../category/category.component';
 // in to the Route path as a string inerpolated expression,
 // it will ensure the /shop route (exact match) takes us to
 // the CollectionOverview component.
-// In the second route, we pass `${match.path}/:categoryId`
+// In the second route, we pass `${match.path}/:collectionId`
 // into the path. This gets the match.path, which is /shop
-// and adds the string value of the relevant categoryId
+// and adds the string value of the relevant collectionId
 // to the url (hats, jackets, etc.) and then renders the
-// CategoryPage component
+// CollectionPage component
 const ShopPage = ({ match }) => (
     <div className='shop-page'>
         <Route
@@ -26,8 +26,8 @@ const ShopPage = ({ match }) => (
             component={ CollectionsOverview }
         />
         <Route
-            path={ `${match.path}/:categoryId` }
-            component={ CategoryPage }
+            path={ `${match.path}/:collectionId` }
+            component={ CollectionPage }
         />
     </div>
 );

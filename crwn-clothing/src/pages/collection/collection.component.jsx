@@ -5,10 +5,10 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 // Import style sheet
 import './collection.styles.scss';
 
-const CategoryPage = () => (
-    <div className='category'>
-        <h2>CATEGORY PAGE</h2>
+const CollectionPage = () => (
+    <div className='collection-page'>
+        <h2>COLLECTION PAGE</h2>
     </div>
 );
 
-export default CategoryPage;
+export default CollectionPage;
