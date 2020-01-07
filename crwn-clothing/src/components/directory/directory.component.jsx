@@ -1,42 +1,36 @@
 import React from 'react';
-// Import DIRECTORY_DATA for the default state
-import DIRECTORY_DATA from './directory.data'
-// Import style sheet
-import './directory.styles.scss';
+// Import connect HOC to enable pulling props from state
+import { connect } from 'react-redux';
+// Import createStructured selector to allow multiple selector calls
+import { createStructuredSelector } from 'reselect';
+// Import directory selector to pass in to mapStateToProps
+import { selectDirectorySections } from '../../redux/directory/directory.selectors';
 // Import MenuItem component
 import MenuItem from '../menu-item/menu-item.component';
+// Import style sheet
+import './directory.styles.scss';
 
-class Directory extends React.Component {
-    constructor() {
-        super();
-        
-        // We set the state here, which will be an array
-        // of the data we want to pass into our directory items
-        this.state = {
-            sections: DIRECTORY_DATA
-        };
-    };
+const Directory = ({ sections }) => (
+    <div className='directory-menu'>
+        {
+            // We want to map over our array and render the 
+            // MenuItem. We also want to destructure the
+            // props and pass in the relevant ones
+            // As the majority of props at the same as the arguments
+            // that we are passing into the MenuItem component, we can
+            // use the spread operator to pass them in at once
+            sections.map(({ id, ...otherSectionProps }) => (
+                <MenuItem
+                    key={id}
+                    { ...otherSectionProps }
+                />
+            ))
+        }
+    </div>
+);
 
-    render() {
-        return (
-            <div className='directory-menu'>
-                {
-                    // We want to map over our array and render the 
-                    // MenuItem. We also want to destructure the
-                    // props and pass in the relevant ones
-                    // As the majority of props at the same as the arguments
-                    // that we are passing into the MenuItem component, we can
-                    // use the spread operator to pass them in at once
-                    this.state.sections.map(({ id, ...otherSectionProps }) => (
-                        <MenuItem
-                            key={id}
-                            { ...otherSectionProps }
-                        />
-                    ))
-                }
-            </div>
-        );
-    }
-}
+const mapStateToProps = createStructuredSelector ({
+    sections: selectDirectorySections
+});
 
-export default Directory;
+export default connect(mapStateToProps)(Directory);

@@ -11,6 +11,8 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './user/user.reducer';
 // Import cartReducer
 import cartReducer from './cart/cart.reducer';
+// Import directoryReducer
+import directoryReducer from './directory/directory.reducer';
 
 // We need to create a persistConfig, which is a
 // JSON object that contains the potential config
@@ -36,7 +38,8 @@ const persistConfig = {
 // as we'll need to pass this in to persistReducer
 const rootReducer = combineReducers({
     user: userReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    directory: directoryReducer
 });
 
 // Then we amend our export to export the persistReducer
