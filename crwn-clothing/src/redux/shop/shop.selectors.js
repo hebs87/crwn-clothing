@@ -10,6 +10,20 @@ export const selectShopCollections = createSelector(
     shop => shop.collections
 );
 
+// Following data normalization, we now need to convert
+// the object's keys to an array, so that the CollectionsOverview
+// component can use these array values to map over the
+// collections and then pass them in to the CollectionPreview
+export const selectShopCollectionsForPreview = createSelector(
+    // We get the object
+    [selectShopCollections],
+    // keys() converts the values of the collections keys to an
+    // array (['hats', 'jackets', etc.]), and we then use map()
+    // to map over the array of keys and return the collections
+    // at that key value
+    collections => Object.keys(collections).map(key => collections[key])
+);
+
 // This selector will use the selectShopCollections selector
 // We use 'currying' to create a function that takes the
 // collectionUrlParam (hats/jackets, etc.) and then uses the
