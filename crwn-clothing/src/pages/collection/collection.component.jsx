@@ -9,11 +9,28 @@ import { selectShopCollection } from '../../redux/shop/shop.selectors';
 // Import style sheet
 import './collection.styles.scss';
 
-const CollectionPage = () => (
-    <div className='collection-page'>
-        <h2>COLLECTION PAGE</h2>
-    </div>
-);
+const CollectionPage = ({ collection }) => {
+    // Destructure our title and items from the
+    // collection prop
+    const { title, items } = collection;
+    return (
+        <div className='collection-page'>
+            <h2 className='title'>{ title }</h2>
+            <div className='items'>
+                {
+                    // We map over our items and display
+                    // them in the CollectionItem component
+                    items.map(item => (
+                        <CollectionItem
+                            key={ item.id }
+                            item={ item }
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    )
+};
 
 // state is the overall state of the root reducer
 // ownProps is the second, optional parameter of
