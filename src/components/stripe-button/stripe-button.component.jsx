@@ -1,8 +1,6 @@
 import React from 'react';
 // Import StripeCheckout
 import StripeCheckout from 'react-stripe-checkout';
-// Import STRIPE_PUBLISHABLE_KEY
-import STRIPE_PUBLISHABLE_KEY from './stripe-key';
 
 // We need to create an onToken action here, but for us,
 // it's just to display an alert that the payment has
@@ -20,7 +18,7 @@ const StripeCheckoutButton = ({ price }) => {
     // to convert our pounds price to pence instead
     const priceForStripe = price * 100;
     // This is the publishable key in stripe
-    const publishableKey = STRIPE_PUBLISHABLE_KEY;
+    const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
     // Now we return the stripe button and pass in the
     // properties that we need
     return (
