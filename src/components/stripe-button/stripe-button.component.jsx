@@ -8,7 +8,7 @@ import StripeCheckout from 'react-stripe-checkout';
 // if we want to handle the charge with our backend though
 const onToken = token => {
     alert('Payment Successful');
-}
+};
 
 // We create our component which renders the StripeCheckoutButton
 // which takes the price prop (this will be the total that is
@@ -17,7 +17,8 @@ const StripeCheckoutButton = ({ price }) => {
     // Stripe needs the price in pence, so we need
     // to convert our pounds price to pence instead
     const priceForStripe = price * 100;
-    // This is the publishable key in stripe
+    // This is the publishable key in stripe. As it is stored
+    // in the .env file, we have to use process.env to access it
     const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
     // Now we return the stripe button and pass in the
     // properties that we need
