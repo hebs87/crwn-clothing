@@ -9,7 +9,15 @@ import rootReducer from './root-reducer';
 
 // The middlewares that our store expects from redux is
 // an array with any number of parameters that we want
-const middlewares = [logger];
+// As we only want the logger middleware in our development
+// environment, we set this as a blank array first
+const middlewares = [];
+
+// If we are in the development environment, we will push
+// the logger middleware into the empty middlewares array
+if (process.env.NODE_ENV === 'development') {
+    middlewares.push(logger);
+};
 
 // We create our store and use the createStore method,
 // which takes two parameters - our rootReducer and also
