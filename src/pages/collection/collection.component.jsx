@@ -6,17 +6,21 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 // Import selectShopCollection selector to get relevant collection
 import { selectShopCollection } from '../../redux/shop/shop.selectors';
 
-// Import style sheet
-import './collection.styles.scss';
+// Import styled components
+import {
+    CollectionPageContainer,
+    CollectionTitle,
+    CollectionItemsContainer
+} from './collection.styles';
 
 const CollectionPage = ({ collection }) => {
     // Destructure our title and items from the
     // collection prop
     const { title, items } = collection;
     return (
-        <div className='collection-page'>
-            <h2 className='title'>{ title }</h2>
-            <div className='items'>
+        <CollectionPageContainer>
+            <CollectionTitle>{ title }</CollectionTitle>
+            <CollectionItemsContainer>
                 {
                     // We map over our items and display
                     // them in the CollectionItem component
@@ -27,8 +31,8 @@ const CollectionPage = ({ collection }) => {
                         />
                     ))
                 }
-            </div>
-        </div>
+            </CollectionItemsContainer>
+        </CollectionPageContainer>
     )
 };
 
