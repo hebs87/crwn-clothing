@@ -9,31 +9,41 @@ import CheckoutItem from '../../components/checkout-item/checkout-item.component
 import StripeCheckoutButton from '../../components/stripe-button/stripe-button.component';
 // Import selectCartItems and selectCartTotal selectors
 import { selectCartItems, selectCartTotal } from '../../redux/cart/cart.selectors';
-// Import style sheet
-import './checkout.styles.scss';
+// Import styled components
+import {
+    CheckoutPageContainer,
+    CheckoutHeaderContainer,
+    HeaderBlockContainer,
+    EmptyMessageContainer,
+    TotalContainer,
+    TestWarningContainer,
+    ButtonContainer
+} from './checkout.styles';
 
 const CheckoutPage = ({ cartItems, total }) => (
-    <div className='checkout-page'>
-        <div className='checkout-header'>
-            <div className='header-block'>
+    <CheckoutPageContainer>
+        <CheckoutHeaderContainer>
+            <HeaderBlockContainer>
                 <span>Product</span>
-            </div>
-            <div className='header-block'>
+            </HeaderBlockContainer>
+            <HeaderBlockContainer>
                 <span>Description</span>
-            </div>
-            <div className='header-block'>
+            </HeaderBlockContainer>
+            <HeaderBlockContainer>
                 <span>Quantity</span>
-            </div>
-            <div className='header-block'>
+            </HeaderBlockContainer>
+            <HeaderBlockContainer>
                 <span>Price</span>
-            </div>
-            <div className='header-block'>
+            </HeaderBlockContainer>
+            <HeaderBlockContainer>
                 <span>Remove</span>
-            </div>
-        </div>
+            </HeaderBlockContainer>
+        </CheckoutHeaderContainer>
         {
             // Map over our cartItems and display them
             // in the CheckoutItem component
+            // If there are cartItems, display them.
+            // If not, display the empty-message
             cartItems.length ? (
                 cartItems.map(cartItem =>
                     <CheckoutItem 
@@ -42,19 +52,23 @@ const CheckoutPage = ({ cartItems, total }) => (
                     />
                 )
             ) : (
-                <span className='empty-message'>
+                <EmptyMessageContainer>
                     Your cart is empty
-                </span>
+                </EmptyMessageContainer>
             )
         }
-        <div className='total'>TOTAL: &pound;{total}</div>
-        <div className='test-warning'>
+        <TotalContainer>
+            TOTAL: &pound;{total}
+        </TotalContainer>
+        <TestWarningContainer>
             *Please use the following test credit card for payments*
             <br />
             4242 4242 4242 4242 - Exp: 01/21 - CVV: 123
-        </div>
-        <StripeCheckoutButton price={ total } />
-    </div>
+        </TestWarningContainer>
+        <ButtonContainer>
+            <StripeCheckoutButton price={ total } />
+        </ButtonContainer>
+    </CheckoutPageContainer>
 );
 
 const mapStateToProps = createStructuredSelector({
