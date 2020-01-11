@@ -15,7 +15,12 @@ import { selectCartHidden } from '../../redux/cart/cart.selectors';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 // Import styled components
-import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink, OptionDiv } from './header.styles';
+import {
+    HeaderContainer,
+    LogoContainer,
+    OptionsContainer,
+    OptionLink
+} from './header.styles';
 
 const Header = ({ currentUser, hidden }) => (
     <HeaderContainer>
@@ -36,7 +41,12 @@ const Header = ({ currentUser, hidden }) => (
                 // If we are signed in, we want to render a div with SIGN OUT,
                 // which signs the user out when they click it
                 currentUser ?
-                (<OptionDiv onClick={() => auth.signOut()}>SIGN OUT</OptionDiv>)
+                // Since we want a div here instead of a Link, we can still
+                // use our OptionLink styled component, but us the as property
+                // to specify that we want it to render as a div. If we wanted
+                // to render it as another component instead, we can use as={}
+                // and pass in the component name
+                (<OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink>)
                 :
                 // Else, we want to display the link to take us to the signin page
                 (<OptionLink to='/signin'>SIGN IN</OptionLink>)

@@ -1,23 +1,10 @@
-// Import css to allow us to create reusable
-// style snippets (for the option Link and div)
-// that share the same styles
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 // Import Link to allow us to pass the Link into
 // the styled component. Once we've done this, we
 // no longer need the Link import in the component
 // file, as it will pull it in when we import our
 // styled components
 import { Link } from 'react-router-dom';
-
-// We want to call the css library to make a
-// reusable CSS styles snippet that can be used
-// by both our OptionLink and OptionDiv - this
-// avoids us repeating our CSS styles in two
-// different components that share the same
-const OptionContainerStyles = css`
-  padding: 10px 15px;
-  cursor: pointer;
-`;
 
 export const HeaderContainer = styled.div`
   height: 70px;
@@ -44,12 +31,7 @@ export const OptionsContainer = styled.div`
   justify-content: flex-end;
 `;
 
-// We pass in our OptionContainerStyles - the
-// reusable CSS styles snippet that we created
 export const OptionLink = styled(Link)`
-  ${OptionContainerStyles}
-`;
-
-export const OptionDiv = styled.div`
-  ${OptionContainerStyles}
+  padding: 10px 15px;
+  cursor: pointer;
 `;
