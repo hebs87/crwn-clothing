@@ -1,6 +1,4 @@
 import React from 'react';
-// Import Link from react-router-dom for the nav links
-import { Link } from 'react-router-dom';
 // Import connect to enable access to reducer
 import { connect } from 'react-redux';
 // Import createStructured selector to allow multiple selector calls
@@ -16,39 +14,39 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
-// Import style sheet
-import './header.styles.scss';
+// Import styled components
+import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink, OptionDiv } from './header.styles';
 
 const Header = ({ currentUser, hidden }) => (
-    <div className='header'>
-        <Link className='logo-container' to='/'>
+    <HeaderContainer>
+        <LogoContainer to='/'>
             <Logo className='logo' />
-        </Link>
-        <div className='options'>
-            <Link className='option' to='/'>
+        </LogoContainer>
+        <OptionsContainer>
+            <OptionLink to='/'>
                 HOME
-            </Link>
-            <Link className='option' to='/shop'>
+            </OptionLink>
+            <OptionLink to='/shop'>
                 SHOP
-            </Link>
-            <Link className='option' to='/'>
+            </OptionLink>
+            <OptionLink to='/'>
                 CONTACT
-            </Link>
+            </OptionLink>
             {
                 // If we are signed in, we want to render a div with SIGN OUT,
                 // which signs the user out when they click it
                 currentUser ?
-                (<div className='option' onClick={() => auth.signOut()}>SIGN OUT</div>)
+                (<OptionDiv onClick={() => auth.signOut()}>SIGN OUT</OptionDiv>)
                 :
                 // Else, we want to display the link to take us to the signin page
-                (<Link className='option' to='/signin'>SIGN IN</Link>)
+                (<OptionLink to='/signin'>SIGN IN</OptionLink>)
             }
             <CartIcon />
-        </div>
+        </OptionsContainer>
         {
             hidden ? null : <CartDropdown />
         }
-    </div>
+    </HeaderContainer>
 );
 
 // mapStateToProps is the function that we create to allow the
