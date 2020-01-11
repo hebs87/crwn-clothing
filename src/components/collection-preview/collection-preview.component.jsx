@@ -4,9 +4,9 @@ import { withRouter } from 'react-router-dom';
 import CollectionItem from '../collection-item/collection-item.component'
 // Import styled components
 import {
-  CollectionPreviewContainer,
-  TitleContainer,
-  PreviewContainer
+    CollectionPreviewContainer,
+    TitleContainer,
+    PreviewContainer
 } from './collection-preview.styles';
 
 const CollectionPreview = ({ title, items, history, match, routeName }) => (

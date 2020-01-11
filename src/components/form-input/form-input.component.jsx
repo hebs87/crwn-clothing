@@ -1,11 +1,14 @@
 import React from 'react';
-// Import style sheet
-import './form-input.styles.scss';
+// Import styled components
+import {
+    GroupContainer,
+    FormInputContainer,
+    FormInputLabel
+} from './form-input.styles';
 
 const FormInput = ({ handleChange, label, ...otherProps }) => (
-    <div className="group">
-        <input
-            className="form-input"
+    <GroupContainer>
+        <FormInputContainer
             onChange={ handleChange }
             { ...otherProps }
         />
@@ -17,14 +20,13 @@ const FormInput = ({ handleChange, label, ...otherProps }) => (
             // we will generate a dynamic class name of shrink to
             // link in with our CSS style to shrink the label.
             // Otherwise, we generate an empty string
-            // It will also always have a class name of
-            // form-input-label
-            (<label className={`${ otherProps.value.length ? 'shrink' : '' } form-input-label` }>
+            (<FormInputLabel
+                className={`${ otherProps.value.length ? 'shrink' : '' }` }>
                 {label}
-            </label>)
+            </FormInputLabel>)
             : null
         }
-    </div>
+    </GroupContainer>
 );
 
 export default FormInput;
