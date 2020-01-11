@@ -7,11 +7,11 @@ import { createStructuredSelector } from 'reselect';
 import { selectDirectorySections } from '../../redux/directory/directory.selectors';
 // Import MenuItem component
 import MenuItem from '../menu-item/menu-item.component';
-// Import style sheet
-import './directory.styles.scss';
+// Import styled components
+import { DirectoryMenuContainer } from './directory.styles';
 
 const Directory = ({ sections }) => (
-    <div className='directory-menu'>
+    <DirectoryMenuContainer>
         {
             // We want to map over our array and render the 
             // MenuItem. We also want to destructure the
@@ -26,7 +26,7 @@ const Directory = ({ sections }) => (
                 />
             ))
         }
-    </div>
+    </DirectoryMenuContainer>
 );
 
 const mapStateToProps = createStructuredSelector ({
