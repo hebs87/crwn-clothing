@@ -7,10 +7,12 @@ import { createStructuredSelector } from 'reselect';
 import { toggleCartHidden } from '../../redux/cart/cart.actions';
 // Import selectCartItemsCount selector to pass in to mapStateToProps
 import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
-// Import shopping bag icon svg
-import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg';
-// Import style sheet
-import './cart-icon.styles.scss';
+// Import styled components
+import {
+    CartIconContainer,
+    ShoppingIcon,
+    ItemCountContainer
+} from './cart-icon.styles';
 
 // Once we've bound the reducer to the component,
 // We need to pass in the toggleCartHidden prop
@@ -20,10 +22,10 @@ import './cart-icon.styles.scss';
 // function to enable displaying the total count in
 // the item-count span
 const CartIcon = ({ toggleCartHidden, itemCount }) => (
-    <div className='cart-icon' onClick={toggleCartHidden}>
-        <ShoppingIcon className='shopping-icon' />
-        <span className='item-count'>{ itemCount }</span>
-    </div>
+    <CartIconContainer onClick={toggleCartHidden}>
+        <ShoppingIcon />
+        <ItemCountContainer>{ itemCount }</ItemCountContainer>
+    </CartIconContainer>
 );
 
 // We create a mapStateToProps function to pull
