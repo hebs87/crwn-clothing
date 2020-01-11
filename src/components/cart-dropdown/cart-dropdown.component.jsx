@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 // Import withRouter to enable button to route to CheckoutPage
 import { withRouter } from 'react-router-dom';
-// Import CustomButton
-import CustomButton from '../custom-button/custom-button.component';
 // Import CartItem
 import CartItem from '../cart-item/cart-item.component';
 // Import selectCartItems selector to pass in to mapStateToProps
@@ -14,8 +12,13 @@ import { selectCartItems } from '../../redux/cart/cart.selectors';
 // Import toggleCartHidden action to enable toggling the cart to hide
 // when clicking the GO TO CHECKOUT BUTTON
 import { toggleCartHidden } from '../../redux/cart/cart.actions'
-// Import style sheet
-import './cart-dropdown.styles.scss';
+// Import styled components
+import {
+    CartDropdownContainer,
+    CartItemsContainer,
+    EmptyMessageContainer,
+    CartDropdownButton
+} from './cart-dropdown.styles';
 
 // We destructure our cartIems so we can pass
 // it into our CartItem component
@@ -23,8 +26,8 @@ import './cart-dropdown.styles.scss';
 // We pass in dispatch to enable passsing the toggle
 // CartDropdown feature to the Button
 const CartDropdown = ({ cartItems, history, dispatch }) => (
-    <div className='cart-dropdown'>
-        <div className='cart-items'>
+    <CartDropdownContainer>
+        <CartItemsContainer>
             {
                 // We need an if statement here so we
                 // conditionally render an 'empty' message
@@ -37,13 +40,13 @@ const CartDropdown = ({ cartItems, history, dispatch }) => (
                     )
                 ) : (
                     // We display a message if cart is empty
-                    <span className='empty-message'>
+                    <EmptyMessageContainer>
                         Your cart is empty
-                    </span>
+                    </EmptyMessageContainer>
                 )
             }
-        </div>
-        <CustomButton
+        </CartItemsContainer>
+        <CartDropdownButton
             onClick={() => {
                 // Route to the checkout route
                 history.push('/checkout');
@@ -53,8 +56,8 @@ const CartDropdown = ({ cartItems, history, dispatch }) => (
             }}
         >
             GO TO CHECKOUT
-        </CustomButton>
-    </div>
+        </CartDropdownButton>
+    </CartDropdownContainer>
 );
 
 // We create a mapStateToProps function to pull
