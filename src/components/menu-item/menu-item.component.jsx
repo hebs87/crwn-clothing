@@ -1,8 +1,14 @@
 import React from 'react';
-// Import style sheet
-import './menu-item.styles.scss';
 // Import withRouter() to enable the avodiance of prop drilling
 import { withRouter } from 'react-router-dom';
+// Import styled components
+import {
+    MenuItemContainer,
+    BackgroundImageContainer,
+    ContentContainer,
+    ContentTitle,
+    ContentSubtitle
+} from './menu-item.styles';
 
 // We want to dynamically generate the title,
 // so we need to deconstruct it in the function parameters
@@ -17,19 +23,19 @@ import { withRouter } from 'react-router-dom';
 // give the menu-item div an onClick argument, which takes
 // a function to return the relevant URL
 const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
-    <div
-        className={`${size} menu-item`}
+    <MenuItemContainer
+        size={size}
         onClick={() => history.push(`${match.url}${linkUrl}`)}
     >
-        <div
+        <BackgroundImageContainer
             className='background-image'
-            style={{ backgroundImage: `url(${ imageUrl })` }}>
-        </div>
-        <div className='content'>
-            <h1 className='title'>{ title.toUpperCase() }</h1>
-            <span className='subtitle'>SHOP NOW</span>
-        </div>
-    </div>
+            imageUrl={ imageUrl }>
+        </BackgroundImageContainer>
+        <ContentContainer>
+            <ContentTitle>{ title.toUpperCase() }</ContentTitle>
+            <ContentSubtitle>SHOP NOW</ContentSubtitle>
+        </ContentContainer>
+    </MenuItemContainer>
 );
 
 export default withRouter(MenuItem);
