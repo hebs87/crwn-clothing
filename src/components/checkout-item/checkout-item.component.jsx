@@ -3,8 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Import clearItemFromCart, addItem, removeItem actions to allow adding/removing/clearing items from cart
 import { clearItemFromCart, addItem, removeItem } from '../../redux/cart/cart.actions';
-// Import style sheet
-import './checkout-item.styles.scss';
+// Import styled components
+import {
+    CheckoutItemContainer,
+    ImageContainer,
+    TextContainer,
+    QuantityContainer,
+    RemoveButtonContainer
+} from './checkout-item.styles';
 
 // We pass in the cartItem prop from the CheckoutPage component
 // We need to do the explicit return in the function
@@ -21,35 +27,26 @@ const CheckoutItem = ({ cartItem, clearItem, addItem, removeItem }) => {
     // so we can pass it into the relevant sections
     const { name, imageUrl, price, quantity } = cartItem;
     return (
-        <div className='checkout-item'>
-            <div className='image-container'>
+        <CheckoutItemContainer>
+            <ImageContainer>
                 <img src={ imageUrl } alt={ name } />
-            </div>
-            <span className='name'>{ name }</span>
-            <span className='quantity'>
-                <div
-                    className='arrow'
-                    onClick={() => removeItem(cartItem)}
-                >
+            </ImageContainer>
+            <TextContainer>{ name }</TextContainer>
+            <QuantityContainer>
+                <div onClick={() => removeItem(cartItem)}>
                     &#10094;
                 </div>
-                <span className='value'>{ quantity }</span>
-                <div
-                    className='arrow'
-                    onClick={() => addItem(cartItem)}
-                >
+                <span>{ quantity }</span>
+                <div onClick={() => addItem(cartItem)}>
                     &#10095;
                 </div>
-            </span>
-            <span className='price'>&pound;{ price }</span>
-            <div
-                className='remove-button'
-                onClick={() => clearItem(cartItem)}
-            >
+            </QuantityContainer>
+            <TextContainer>&pound;{ price }</TextContainer>
+            <RemoveButtonContainer onClick={() => clearItem(cartItem)}>
                 &#10005;
-            </div>
-        </div>
-    )
+            </RemoveButtonContainer>
+        </CheckoutItemContainer>
+    );
 };
 
 // This allows us to pass in the item to the
