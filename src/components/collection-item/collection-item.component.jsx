@@ -1,12 +1,17 @@
 import React from 'react';
 // Import connect to enable passing state to component
 import { connect } from 'react-redux';
-// Import CustomButton
-import CustomButton from '../custom-button/custom-button.component';
 // Import addItem action to allow adding item to cart
 import { addItem } from '../../redux/cart/cart.actions';
-// Import styles.css file
-import './collection-item.styles.scss'
+// Import styled components
+import {
+    CollectionItemContainer,
+    CollectionFooterContainer,
+    AddButton,
+    BackgroundImage,
+    NameContainer,
+    PriceContainer
+} from './collection-item.styles';
 
 // We pass in our item from the collection-preview,
 // and also the addItem action and then explicitely
@@ -19,24 +24,24 @@ const CollectionItem = ({ item, addItem }) => {
     // We need to destructure
     const { name, price, imageUrl } = item;
     return (
-        <div className='collection-item'>
-            <div
+        <CollectionItemContainer>
+            <BackgroundImage
                 className='image'
                 style={{
                     backgroundImage: `url(${ imageUrl })`
                 }}
             />
-            <div className='collection-footer'>
-                <span className='name'>{ name }</span>
-                <span className='price'>&pound;{ price }</span>
-            </div>
-            <CustomButton
+            <CollectionFooterContainer>
+                <NameContainer>{ name }</NameContainer>
+                <PriceContainer>&pound;{ price }</PriceContainer>
+            </CollectionFooterContainer>
+            <AddButton
                 onClick={() => addItem(item)}
                 inverted
             >
                 Add to cart
-            </CustomButton>
-        </div>
+            </AddButton>
+        </CollectionItemContainer>
     )
 };
 
