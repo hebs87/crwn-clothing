@@ -55,6 +55,44 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef;
 };
 
+// We want to write a util that allows us to batch our
+// data and move it to the database in one go, to avoid
+// us having to manually add it to our database - this
+// will be an asynchronous util.
+// It takes the collectionKey and the objectsToAdd
+export const addCollectionAndDocument = async (
+    collectionKey,
+    objectsToAdd
+) => {
+    // First, we want to create the collection in firebase
+    // using the collectionKey of the collection in our app
+    const collectionRef = firestore.collection(collectionKey);
+    // We can only write one document to firestore at once, so
+    // we want to use batch() to batch write the documents first,
+    // and then add them all to firestore. This will ensure that
+    // if one or more documents fail to upload, the whole process
+    // will fail
+    const batch = firestore.batch();
+    // We loop over our objectsToAdd array using the forEach()
+    // method - this difference between this and .map() is that
+    // a new array isn't created, which is what we want
+    objectsToAdd.forEach(obj => {
+        // We are telling firebase to give us a new document
+        // reference in this collection and randomly generate
+        // an ID for it
+        const newDocRef = collectionRef.doc();
+        // We then call batch.set() so that we batch the requests
+        // We pass it the newDocRef and the value we want to set
+        // it to - obj in this instance
+        batch.set(newDocRef, obj);
+    });
+    // We then want to commit our batch - this returns a promise
+    // When commit() succeeds, it will return us a null value,
+    // which is useful if we want to use .then to do something
+    // after it succeeds, or if we want to handle errors too
+    return await batch.commit();
+};
+
 firebase.initializeApp(config);
 
 // Export this so we can call the auth whenever we want it
