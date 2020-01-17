@@ -60,7 +60,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 // us having to manually add it to our database - this
 // will be an asynchronous util.
 // It takes the collectionKey and the objectsToAdd
-export const addCollectionAndDocument = async (
+export const addCollectionAndDocuments = async (
     collectionKey,
     objectsToAdd
 ) => {
