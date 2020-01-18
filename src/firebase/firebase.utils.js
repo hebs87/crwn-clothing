@@ -93,6 +93,41 @@ export const addCollectionAndDocuments = async (
     return await batch.commit();
 };
 
+// We want to write a util that gets our snapshot shop data
+// from firebase and converts it to an object with the object
+// structure that we ultimately want to pass in to our shop
+// reducer - collections is the snapshot object that we will
+// pass in from our ShopData component
+export const convertCollectionSnapshotToMap = collections => {
+    // We want to use .docs to get the documentSnapshot,
+    // then we can map over it and pull the data that we
+    // want - the title and the items
+    const transformedCollection = collections.docs.map(doc => {
+        const { title, items } = doc.data();
+
+        // We then want to return an object that represents the
+        // final data object that we want for our front-end app,
+        // including the routeName, id, title and items
+        return {
+            // encodeURI is a JavaScript method which takes a
+            // string and converts any special characters that
+            // a URL can't read, and converts them into a value
+            // that the URL can read. In this instance, the
+            // routeName is the same as the title, but in lower
+            // case, so we want to pass in the title and convert
+            // it to lower case
+            routeName: encodeURI(title.toLowerCase()),
+            // We get the ID from the doc itself, rather than
+            // the data
+            id: doc.id,
+            title,
+            items
+        };
+    });
+
+    console.log(transformedCollection);
+};
+
 firebase.initializeApp(config);
 
 // Export this so we can call the auth whenever we want it
