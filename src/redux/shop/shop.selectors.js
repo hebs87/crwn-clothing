@@ -41,6 +41,12 @@ export const selectShopCollectionsForPreview = createSelector(
 export const selectShopCollection = collectionUrlParam =>
     createSelector(
         [selectShopCollections],
-        collections => 
-            collections[collectionUrlParam]
+        collections =>
+            // If the collections object doesn't exist,
+            // we want to return a null value. If it does
+            // exist, we want to return our collections
+            (collections ?
+                collections[collectionUrlParam]
+                :
+                null)
     );
