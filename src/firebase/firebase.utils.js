@@ -125,7 +125,27 @@ export const convertCollectionSnapshotToMap = collections => {
         };
     });
 
-    console.log(transformedCollection);
+    // We want to reduce our transformedCollection to give us
+    // the final data structure that we need, which we can pass
+    // into our reducer.
+    // The second parameter of our reduce is going to be an
+    // empty object, which will be the accumulator's starting value
+    // The first param will be a function that gets our accumulator
+    // and also the collection at the current iteration.
+    // Inside the function, we want to set the accumulator key to
+    // the lower case title of the function, and then make the key
+    // equal to the collection itself - so the hats key will get
+    // the hats collection, the jackets key will get the jackets
+    // collection, and so on, until there are no more collections
+    // to iterate/reduce over. We return the accumulator on each
+    // iteration, so that become the new value of the accumulator
+    // for the next iteration.
+    // The iterations occur until there are no more collections
+    // left and we have the final object.
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {});
 };
 
 firebase.initializeApp(config);

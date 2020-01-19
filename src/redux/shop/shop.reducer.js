@@ -1,5 +1,7 @@
 // Import SHOP_DATA
 import SHOP_DATA from './shop.data';
+// Import types
+import ShopActionTypes from './shop.types';
 
 // Create INITIAL_STATE
 const INITIAL_STATE = {
@@ -9,7 +11,14 @@ const INITIAL_STATE = {
 // Create reducer
 const shopReducer = (state = INITIAL_STATE, action) => {
     switch(action) {
-        // Only need our default that returns the state
+        // Create a new case that takes the action type
+        // and returns an object with the state and the
+        // action payload
+        case ShopActionTypes.UPDATE_COLLECTIONS:
+            return {
+                ...state,
+                collections: action.payload
+            };
         default:
             return state
     }

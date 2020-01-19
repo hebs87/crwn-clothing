@@ -1,16 +1,22 @@
 import React from 'react';
 // Import Route to enable advanced routing
 import { Route } from 'react-router-dom';
-// Import CollectionOverview
-import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
-// Import CollectionPage
-import CollectionPage from '../collection/collection.component';
+// Import connect to enable passing in mapDispatchToProps
+import { connect } from 'react-redux';
+
 // Import convertCollectionSnapshotToMap and firestore to enable
 // pulling data from the firestore database
 import {
     firestore,
     convertCollectionSnapshotToMap
 } from '../../firebase/firebase.utils';
+// Import updateCollections action to allow passing snapshot to props
+import { updateCollections } from '../../redux/shop/shop.actions';
+
+// Import CollectionOverview
+import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
+// Import CollectionPage
+import CollectionPage from '../collection/collection.component';
 
 // This needs to be a class based component, as we want
 // to pull the shop data from firebase and store it as
@@ -34,6 +40,9 @@ class ShopPage extends React.Component {
     unsubscribeFromSnapshot = null;
 
     componentDidMount() {
+        // We need to destructure our updateCollections from
+        // the props
+        const { updateCollections } = this.props;
         // We want to call the firestore.collection and pass
         // in the name of our collection. This gets the
         // 'collections' collection from firebase and stores
@@ -46,9 +55,13 @@ class ShopPage extends React.Component {
         // at that time.
         // We want to write an async function, so we get the
         // snapshot as the prop and then pass it into the
-        // convertCollectionSnapshotToMap function
+        // convertCollectionSnapshotToMap function and store
+        // in a collectionsMap const.
+        // We then want to call our updateCollections action
+        // and pass the collectionsMap into it
         collectionRef.onSnapshot(async snapshot => {
-            convertCollectionSnapshotToMap(snapshot);
+            const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+            updateCollections(collectionsMap);
         });
     };
 
@@ -70,4 +83,16 @@ class ShopPage extends React.Component {
     }
 };
 
-export default ShopPage;
+// The mapDispatchToProps uses a dispatch function which
+// takes the collectionsMap, calls the dispatch and passes
+// in the updateCollections action, we then pass in the
+// collectionsMap into the updateCollections action
+const mapDispatchToProps = dispatch => ({
+    updateCollections: collectionsMap =>
+        dispatch(updateCollections(collectionsMap))
+});
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(ShopPage);
