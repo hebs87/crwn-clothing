@@ -17,6 +17,8 @@ const config = {
     measurementId: "G-VPEMW2RJM6"
 };
 
+firebase.initializeApp(config);
+
 // We create an asynchronous function to pull the userAuth
 // object that is generated when a user logs in, and we then
 // use it to store the relevant information in the DB
@@ -98,7 +100,7 @@ export const addCollectionAndDocuments = async (
 // structure that we ultimately want to pass in to our shop
 // reducer - collections is the snapshot object that we will
 // pass in from our ShopData component
-export const convertCollectionSnapshotToMap = collections => {
+export const convertCollectionsSnapshotToMap = collections => {
     // We want to use .docs to get the documentSnapshot,
     // then we can map over it and pull the data that we
     // want - the title and the items
@@ -147,8 +149,6 @@ export const convertCollectionSnapshotToMap = collections => {
         return accumulator;
     }, {});
 };
-
-firebase.initializeApp(config);
 
 // Export this so we can call the auth whenever we want it
 export const auth = firebase.auth();

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 // pulling data from the firestore database
 import {
     firestore,
-    convertCollectionSnapshotToMap
+    convertCollectionsSnapshotToMap
 } from '../../firebase/firebase.utils';
 // Import updateCollections action to allow passing snapshot to props
 import { updateCollections } from '../../redux/shop/shop.actions';
@@ -60,7 +60,7 @@ class ShopPage extends React.Component {
         // We then want to call our updateCollections action
         // and pass the collectionsMap into it
         collectionRef.onSnapshot(async snapshot => {
-            const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
             updateCollections(collectionsMap);
         });
     };

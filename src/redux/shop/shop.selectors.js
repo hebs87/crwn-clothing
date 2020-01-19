@@ -20,8 +20,15 @@ export const selectShopCollectionsForPreview = createSelector(
     // keys() converts the values of the collections keys to an
     // array (['hats', 'jackets', etc.]), and we then use map()
     // to map over the array of keys and return the collections
-    // at that key value
-    collections => Object.keys(collections).map(key => collections[key])
+    // at that key value.
+    // As pulling the data from the backend is an async function,
+    // the data can be in a state of null. If that's the case, we
+    // want to return an empty array. Then when the there is data,
+    // we can map over it.
+    collections => collections ? 
+        Object.keys(collections).map(key => collections[key])
+        :
+        []
 );
 
 // This selector will use the selectShopCollections selector

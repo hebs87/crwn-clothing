@@ -1,16 +1,14 @@
-// Import SHOP_DATA
-import SHOP_DATA from './shop.data';
 // Import types
 import ShopActionTypes from './shop.types';
 
 // Create INITIAL_STATE
 const INITIAL_STATE = {
-    collections: SHOP_DATA
+    collections: null
 };
 
 // Create reducer
 const shopReducer = (state = INITIAL_STATE, action) => {
-    switch(action) {
+    switch(action.type) {
         // Create a new case that takes the action type
         // and returns an object with the state and the
         // action payload
