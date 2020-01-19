@@ -13,10 +13,20 @@ import {
 // Import updateCollections action to allow passing snapshot to props
 import { updateCollections } from '../../redux/shop/shop.actions';
 
+// Import WithSpinner HOC
+import WithSpinner from '../../components/with-spinner/with-spinner.component';
+
 // Import CollectionOverview
 import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
 // Import CollectionPage
 import CollectionPage from '../collection/collection.component';
+
+// After creating and importing our WithSpinner HOC,
+// we want to wrap both the CollectionsOverview
+// and CollectionPage components with our HOC to
+// enable them to have access to the isLoading prop
+const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
+const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 // This needs to be a class based component, as we want
 // to pull the shop data from firebase and store it as
@@ -34,6 +44,12 @@ import CollectionPage from '../collection/collection.component';
 // to the url (hats, jackets, etc.) and then renders the
 // CollectionPage component
 class ShopPage extends React.Component {
+    // After creating our WithSpinner HOC, we need to set
+    // the default loading state of our component to true
+    state = {
+        loading: true
+    };
+
     // We want to set the value of unsubscribeFromSnapshot
     // to null so that the data is unmounted when the
     // component unmounts
@@ -59,24 +75,40 @@ class ShopPage extends React.Component {
         // in a collectionsMap const.
         // We then want to call our updateCollections action
         // and pass the collectionsMap into it
-        collectionRef.onSnapshot(async snapshot => {
+        // After creating our WithSpinner HOC, we also want
+        // to set the loading state to false once all the
+        // data is loaded
+        this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
             const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
             updateCollections(collectionsMap);
+            this.setState({ loading: false })
         });
     };
 
     render() {
-        const { match } = this.props;       
+        const { match } = this.props;
+        // We want to destructure the loading prop from the state
+        const { loading } = this.state;
         return (
             <div className='shop-page'>
                 <Route
                     exact
                     path={ `${match.path}` }
-                    component={ CollectionsOverview }
+                    render={props =>(
+                        <CollectionsOverviewWithSpinner
+                            isLoading={ loading }
+                            { ...props }
+                        />
+                    )}
                 />
                 <Route
                     path={ `${match.path}/:collectionId` }
-                    component={ CollectionPage }
+                    render={props => (
+                        <CollectionPageWithSpinner
+                            isLoading={ loading }
+                            { ...props }
+                        />
+                    )}
                 />
             </div>
         )
