@@ -4,6 +4,9 @@ import { persistStore } from 'redux-persist';
 // Import logger, which console logs the input of the
 // actions to help us better understand what is happening
 import logger from 'redux-logger';
+// Import thunk to enable reusability of asynchronous actions
+// (to get the shop data from the firestore)
+import thunk from 'redux-thunk';
 // Import our rootReducer
 import rootReducer from './root-reducer';
 
@@ -11,7 +14,9 @@ import rootReducer from './root-reducer';
 // an array with any number of parameters that we want
 // As we only want the logger middleware in our development
 // environment, we set this as a blank array first
-const middlewares = [];
+// Once we've installed redux-thunk and imported thunk,
+// we want to push it into our middlewares array
+const middlewares = [thunk];
 
 // If we are in the development environment, we will push
 // the logger middleware into the empty middlewares array
