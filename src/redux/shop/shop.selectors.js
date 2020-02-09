@@ -50,3 +50,13 @@ export const selectShopCollection = collectionUrlParam =>
                 :
                 null)
     );
+
+// Once we've moved our fetching of the shop data
+// functionality into our reducer and created the
+// relevant actions, we create this selector to
+// enable us to set the fetching state to use our
+// spinner when loading the data
+export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
+);
