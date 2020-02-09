@@ -65,12 +65,11 @@ class ShopPage extends React.Component {
         // it in the collectionRef const
         const collectionRef = firestore.collection('collections');
         // Now we want to get the data from it, so we need to
-        // use the onSnapshot method. This ensures that when
-        // the component runs for the first time or updates,
-        // we get the snapshot of whatever data is running
-        // at that time.
-        // We want to write an async function, so we get the
-        // snapshot as the prop and then pass it into the
+        // use the get() method. This ensures that when
+        // the component runs for the first time or re-renders,
+        // we get the data that is running. We then use the then()
+        // method, which asynchronously gets the snapshot as the
+        // prop and then pass it into the
         // convertCollectionSnapshotToMap function and store
         // in a collectionsMap const.
         // We then want to call our updateCollections action
@@ -78,7 +77,7 @@ class ShopPage extends React.Component {
         // After creating our WithSpinner HOC, we also want
         // to set the loading state to false once all the
         // data is loaded
-        this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
+        collectionRef.get().then(snapshot => {
             const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
             updateCollections(collectionsMap);
             this.setState({ loading: false })
