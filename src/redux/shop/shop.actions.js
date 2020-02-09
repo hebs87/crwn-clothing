@@ -23,6 +23,13 @@ export const fetchCollectionsSuccess = collectionsMap ({
     payload: collectionsMap
 });
 
+// This is our error call, which fires if we get an
+// error when fetching the data
+export const fetchCollectionsFailure = errorMessage => ({
+    type: ShopActionTypes.FETCH_COLLECTIONS_FAILURE,
+    payload: errorMessage
+});
+
 // Instead of writing a function that returns an
 // action, we are now writing a function that returns
 // a function that gets dispatch in it, so that
@@ -61,6 +68,9 @@ export const fetchCollectionsStartAsync = () => {
             // and pass in the collectionsMap, so that it
             // is set as the payload
             dispatch(fetchCollectionsSuccess(collectionsMap));
-        });
+            // We then have a catch handler to get our error message,
+            // and we use the dispatch to dispatch the error.message
+            // into the fetchCollectionsFailure action
+        }).catch(error => dispatch(fetchCollectionsFailure(error.message)));
     }
 }
