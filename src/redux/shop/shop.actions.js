@@ -18,7 +18,7 @@ export const fetchCollectionsStart = () => ({
 // have successfully got the data from our firestore
 // This is where we get our collectionsMap and set
 // it as our payload
-export const fetchCollectionsSuccess = collectionsMap ({
+export const fetchCollectionsSuccess = collectionsMap => ({
     type: ShopActionTypes.FETCH_COLLECTIONS_SUCCESS,
     payload: collectionsMap
 });

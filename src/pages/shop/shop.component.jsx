@@ -1,17 +1,15 @@
 import React from 'react';
 // Import Route to enable advanced routing
 import { Route } from 'react-router-dom';
+// Import createStructuredSelector
+import { createStructuredSelector } from 'reselect';
 // Import connect to enable passing in mapDispatchToProps
 import { connect } from 'react-redux';
 
-// Import convertCollectionSnapshotToMap and firestore to enable
-// pulling data from the firestore database
-import {
-    firestore,
-    convertCollectionsSnapshotToMap
-} from '../../firebase/firebase.utils';
-// Import updateCollections action to allow passing snapshot to props
-import { updateCollections } from '../../redux/shop/shop.actions';
+// Import fetchCollectionsStartAsync action to allow passing snapshot to props
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+// Import selectIsCollectionFetching to pull in isFetching property
+import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
 
 // Import WithSpinner HOC
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
@@ -44,50 +42,23 @@ const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 // to the url (hats, jackets, etc.) and then renders the
 // CollectionPage component
 class ShopPage extends React.Component {
-    // After creating our WithSpinner HOC, we need to set
-    // the default loading state of our component to true
-    state = {
-        loading: true
-    };
-
-    // We want to set the value of unsubscribeFromSnapshot
-    // to null so that the data is unmounted when the
-    // component unmounts
-    unsubscribeFromSnapshot = null;
-
     componentDidMount() {
-        // We need to destructure our updateCollections from
-        // the props
-        const { updateCollections } = this.props;
-        // We want to call the firestore.collection and pass
-        // in the name of our collection. This gets the
-        // 'collections' collection from firebase and stores
-        // it in the collectionRef const
-        const collectionRef = firestore.collection('collections');
-        // Now we want to get the data from it, so we need to
-        // use the get() method. This ensures that when
-        // the component runs for the first time or re-renders,
-        // we get the data that is running. We then use the then()
-        // method, which asynchronously gets the snapshot as the
-        // prop and then pass it into the
-        // convertCollectionSnapshotToMap function and store
-        // in a collectionsMap const.
-        // We then want to call our updateCollections action
-        // and pass the collectionsMap into it
-        // After creating our WithSpinner HOC, we also want
-        // to set the loading state to false once all the
-        // data is loaded
-        collectionRef.get().then(snapshot => {
-            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-            updateCollections(collectionsMap);
-            this.setState({ loading: false })
-        });
+        // We need to destructure fetchCollectionsStartAsync
+        // from our props
+        const { fetchCollectionsStartAsync } = this.props;
+        // We then call it the moment our component mounts,
+        // which then pulls in the data from the reducer
+        fetchCollectionsStartAsync();
     };
 
     render() {
-        const { match } = this.props;
-        // We want to destructure the loading prop from the state
-        const { loading } = this.state;
+        // Instead of pulling in the loading state
+        // (what we did initially), we now need to
+        // destructure the isCollectionFetching from
+        // our props, and set that as the isLoading
+        // state instead
+        const { match, isCollectionFetching } = this.props;
+
         return (
             <div className='shop-page'>
                 <Route
@@ -95,7 +66,7 @@ class ShopPage extends React.Component {
                     path={ `${match.path}` }
                     render={props =>(
                         <CollectionsOverviewWithSpinner
-                            isLoading={ loading }
+                            isLoading={ isCollectionFetching }
                             { ...props }
                         />
                     )}
@@ -104,7 +75,7 @@ class ShopPage extends React.Component {
                     path={ `${match.path}/:collectionId` }
                     render={props => (
                         <CollectionPageWithSpinner
-                            isLoading={ loading }
+                            isLoading={ isCollectionFetching }
                             { ...props }
                         />
                     )}
@@ -114,16 +85,23 @@ class ShopPage extends React.Component {
     }
 };
 
+// The mapStateToProps sets our isCollectionFetching
+// state to the selectIsCollectionFetching selector
+// This allows us to set our isFetching state within
+// the component, to then make our spinner work
+const mapStateToProps = createStructuredSelector({
+    isCollectionFetching: selectIsCollectionFetching
+});
+
 // The mapDispatchToProps uses a dispatch function which
-// takes the collectionsMap, calls the dispatch and passes
-// in the updateCollections action, we then pass in the
-// collectionsMap into the updateCollections action
+// dispatched the fetchCollectionStartAsync method
+// as the fetchCollectionStartAsync value 
 const mapDispatchToProps = dispatch => ({
-    updateCollections: collectionsMap =>
-        dispatch(updateCollections(collectionsMap))
+    fetchCollectionsStartAsync: () =>
+        dispatch(fetchCollectionsStartAsync())
 });
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(ShopPage);
