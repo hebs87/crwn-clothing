@@ -9,7 +9,11 @@ import { connect } from 'react-redux';
 // Import fetchCollectionsStartAsync action to allow passing snapshot to props
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
 // Import selectIsCollectionFetching to pull in isFetching property
-import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+// Import selectIsCollectionsLoaded to pull loaded state
+import {
+    selectIsCollectionFetching,
+    selectIsCollectionsLoaded
+} from '../../redux/shop/shop.selectors';
 
 // Import WithSpinner HOC
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
@@ -54,10 +58,10 @@ class ShopPage extends React.Component {
     render() {
         // Instead of pulling in the loading state
         // (what we did initially), we now need to
-        // destructure the isCollectionFetching from
-        // our props, and set that as the isLoading
-        // state instead
-        const { match, isCollectionFetching } = this.props;
+        // destructure the isCollectionFetching and
+        // isCollectionsLoaded from our props, and 
+        // set that as the isLoading state instead
+        const { match, isCollectionFetching, isCollectionsLoaded } = this.props;
 
         return (
             <div className='shop-page'>
@@ -75,7 +79,7 @@ class ShopPage extends React.Component {
                     path={ `${match.path}/:collectionId` }
                     render={props => (
                         <CollectionPageWithSpinner
-                            isLoading={ isCollectionFetching }
+                            isLoading={ !isCollectionsLoaded }
                             { ...props }
                         />
                     )}
@@ -87,10 +91,13 @@ class ShopPage extends React.Component {
 
 // The mapStateToProps sets our isCollectionFetching
 // state to the selectIsCollectionFetching selector
+// and the isCollectionsLoaded state to the
+// selectIsCollectionsLoaded selector
 // This allows us to set our isFetching state within
 // the component, to then make our spinner work
 const mapStateToProps = createStructuredSelector({
-    isCollectionFetching: selectIsCollectionFetching
+    isCollectionFetching: selectIsCollectionFetching,
+    isCollectionsLoaded: selectIsCollectionsLoaded
 });
 
 // The mapDispatchToProps uses a dispatch function which

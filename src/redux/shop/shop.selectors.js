@@ -60,3 +60,13 @@ export const selectIsCollectionFetching = createSelector(
     [selectShop],
     shop => shop.isFetching
 );
+
+// This selector determines whether the collection
+// request has loaded successfully, and returns us
+// a boolean value of whether the collection is
+// null or not - !! converts the truthy or falsy
+// value to an actual boolean value
+export const selectIsCollectionsLoaded = createSelector(
+    [selectShop],
+    shop => !!shop.collections
+);
