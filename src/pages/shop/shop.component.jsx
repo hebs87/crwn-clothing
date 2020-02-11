@@ -8,18 +8,16 @@ import { connect } from 'react-redux';
 
 // Import fetchCollectionsStartAsync action to allow passing snapshot to props
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
-// Import selectIsCollectionFetching to pull in isFetching property
 // Import selectIsCollectionsLoaded to pull loaded state
 import {
-    selectIsCollectionFetching,
     selectIsCollectionsLoaded
 } from '../../redux/shop/shop.selectors';
 
 // Import WithSpinner HOC
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 
-// Import CollectionOverview
-import CollectionsOverview from '../../components/collections-overview/collection-overview.component';
+// Import CollectionsOverviewContainer
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
 // Import CollectionPage
 import CollectionPage from '../collection/collection.component';
 
@@ -27,7 +25,6 @@ import CollectionPage from '../collection/collection.component';
 // we want to wrap both the CollectionsOverview
 // and CollectionPage components with our HOC to
 // enable them to have access to the isLoading prop
-const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
 const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 // This needs to be a class based component, as we want
@@ -61,19 +58,14 @@ class ShopPage extends React.Component {
         // destructure the isCollectionFetching and
         // isCollectionsLoaded from our props, and 
         // set that as the isLoading state instead
-        const { match, isCollectionFetching, isCollectionsLoaded } = this.props;
+        const { match, isCollectionsLoaded } = this.props;
 
         return (
             <div className='shop-page'>
                 <Route
                     exact
                     path={ `${match.path}` }
-                    render={props =>(
-                        <CollectionsOverviewWithSpinner
-                            isLoading={ isCollectionFetching }
-                            { ...props }
-                        />
-                    )}
+                    component={ CollectionsOverviewContainer }
                 />
                 <Route
                     path={ `${match.path}/:collectionId` }
@@ -89,14 +81,11 @@ class ShopPage extends React.Component {
     }
 };
 
-// The mapStateToProps sets our isCollectionFetching
-// state to the selectIsCollectionFetching selector
-// and the isCollectionsLoaded state to the
-// selectIsCollectionsLoaded selector
+// The mapStateToProps sets our isCollectionsLoaded
+// state to the selectIsCollectionsLoaded selector
 // This allows us to set our isFetching state within
 // the component, to then make our spinner work
 const mapStateToProps = createStructuredSelector({
-    isCollectionFetching: selectIsCollectionFetching,
     isCollectionsLoaded: selectIsCollectionsLoaded
 });
 

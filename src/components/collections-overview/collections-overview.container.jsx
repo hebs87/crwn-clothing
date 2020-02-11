@@ -10,7 +10,6 @@ import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
 import WithSpinner from '../with-spinner/with-spinner.component';
 // Import CollectionsOverview component
 import CollectionsOverview from '../collections-overview/collection-overview.component';
-import { CollectionsOverviewContainer } from './collections-overview.styles';
 
 // The mapStateToProps sets our isLoading state
 // to the selectIsCollectionFetching selector
