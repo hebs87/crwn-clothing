@@ -29,7 +29,7 @@ const mapStateToProps = createStructuredSelector({
 // relevant HOCs, and then we pass in the component
 // that we ultimately want to wrap - in this case, we
 // pass in connect and WithSpinner to the compose and
-// then we pass CollectionOverview into the whol thing
+// then we pass CollectionOverview into the whole thing
 const CollectionsOverviewContainer = compose(
     connect(mapStateToProps),
     WithSpinner
