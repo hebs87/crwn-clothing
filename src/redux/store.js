@@ -6,17 +6,28 @@ import { persistStore } from 'redux-persist';
 import logger from 'redux-logger';
 // Import thunk to enable reusability of asynchronous actions
 // (to get the shop data from the firestore)
-import thunk from 'redux-thunk';
+// No longer needed if we are using saga instead
+// import thunk from 'redux-thunk';
+// Import createSagaMiddleware to enable use of sagas
+import createSagaMiddleware from 'redux-saga';
+
 // Import our rootReducer
 import rootReducer from './root-reducer';
+
+// To use sagas, we need to first call the
+// createSagamiddleware function and store it in a variable
+const sagaMiddleware = createSagaMiddleware();
 
 // The middlewares that our store expects from redux is
 // an array with any number of parameters that we want
 // As we only want the logger middleware in our development
 // environment, we set this as a blank array first
 // Once we've installed redux-thunk and imported thunk,
-// we want to push it into our middlewares array
-const middlewares = [thunk];
+// we want to push it into our middlewares array. However,
+// we don't need this when using sagas instead
+// When using sagas, we can push the sagaMiddleware variable
+// into the middlewares instead
+const middlewares = [sagaMiddleware];
 
 // If we are in the development environment, we will push
 // the logger middleware into the empty middlewares array
@@ -31,6 +42,10 @@ if (process.env.NODE_ENV === 'development') {
 // scalable so that we don't have to pass in each
 // individual parameter)
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
+
+// Once our saga middleware is called, we need to call it and
+// pass in the individual sagas that we want to run
+// sagaMiddleware.run();
 
 // We want to create a persistor and pass in our store
 // to enable it to persist in either local or session storage
