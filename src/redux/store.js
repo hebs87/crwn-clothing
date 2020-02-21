@@ -11,6 +11,9 @@ import logger from 'redux-logger';
 // Import createSagaMiddleware to enable use of sagas
 import createSagaMiddleware from 'redux-saga';
 
+// Import our sagas
+import { fetchCollectionsStart } from './shop/shop.sagas';
+
 // Import our rootReducer
 import rootReducer from './root-reducer';
 
@@ -45,7 +48,7 @@ export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 // Once our saga middleware is called, we need to call it and
 // pass in the individual sagas that we want to run
-// sagaMiddleware.run();
+sagaMiddleware.run(fetchCollectionsStart);
 
 // We want to create a persistor and pass in our store
 // to enable it to persist in either local or session storage

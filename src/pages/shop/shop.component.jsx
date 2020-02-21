@@ -4,8 +4,8 @@ import { Route } from 'react-router-dom';
 // Import connect to enable passing in mapDispatchToProps
 import { connect } from 'react-redux';
 
-// Import fetchCollectionsStartAsync action to allow passing snapshot to props
-import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+// Import fetchCollectionsStart action to allow passing snapshot to props
+import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
 
 // Import CollectionsOverviewContainer
 import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
@@ -30,12 +30,12 @@ import CollectionPageContainer from '../collection/collection.container';
 // CollectionPage component
 class ShopPage extends React.Component {
     componentDidMount() {
-        // We need to destructure fetchCollectionsStartAsync
+        // We need to destructure fetchCollectionsStart
         // from our props
-        const { fetchCollectionsStartAsync } = this.props;
+        const { fetchCollectionsStart } = this.props;
         // We then call it the moment our component mounts,
         // which then pulls in the data from the reducer
-        fetchCollectionsStartAsync();
+        fetchCollectionsStart();
     };
 
     render() {
@@ -62,8 +62,8 @@ class ShopPage extends React.Component {
 // dispatched the fetchCollectionStartAsync method
 // as the fetchCollectionStartAsync value 
 const mapDispatchToProps = dispatch => ({
-    fetchCollectionsStartAsync: () =>
-        dispatch(fetchCollectionsStartAsync())
+    fetchCollectionsStart: () =>
+        dispatch(fetchCollectionsStart())
 });
 
 export default connect(
