@@ -1,7 +1,7 @@
-// Import takeEvery to listen to every action of specific type
+// Import takeLatest to listen to every action of specific type
 // Import call to enable creating the collectionsMap
 // Import put to enable us to dispatch any actions
-import { takeEvery, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 
 // Import relevant utilities from firebase utils
 import {
@@ -56,12 +56,14 @@ export function* fetchCollectionsAsync() {
 
 // We build our fetchCollectionsStart generator function
 // which is declared using the function* syntax
-// The generator function uses the takeEvery method which
+// The generator function uses the takeLatest method which
 // listens to every action of a specific type (first argument),
 // and also a second generator function (second argument) - this
-// is how we step through the yield code
+// is how we step through the yield code. It only invokes the
+// latest action, so if the fetchCollectionsAsync Saga is run
+// multiple times, it will cancel all other previous ones
 export function* fetchCollectionsStart() {
-    yield takeEvery(
+    yield takeLatest(
         ShopActionTypes.FETCH_COLLECTIONS_START,
         fetchCollectionsAsync
     );
