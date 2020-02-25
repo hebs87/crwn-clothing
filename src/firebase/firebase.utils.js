@@ -150,6 +150,31 @@ export const convertCollectionsSnapshotToMap = collections => {
     }, {});
 };
 
+// This utility will be used to move our user persistence into a
+// saga - it will leverage the previous code in our componentDidMount
+// to check the user state against the onSnapshot.authenticated()
+// method, and it will immediately unsubscribe once we get the
+// initial value
+export const getCurrentUser = () => {
+    // We want to return a promise-based solution here that our
+    // sagas can yield for (there is no natural way of making this
+    // promise based, so we need to do it here)
+    return new Promise((resolve, reject) => {
+        // We use the same unsubscribe pattern that we previously
+        // had, calling our auth.onAuthStateChanged(userAuth) to
+        // get the value. Once we get it, we unsubscribe and then
+        // resolve it with the userAuth object that we get back
+        // If it fails, we'll just reject with whatever the error
+        // The promise will resolve with the correct userAuth
+        // value, if there is one. If there isn't, then it will
+        // return back null, which is how it previously worked
+        const unsubscribe = auth.onAuthStateChanged(userAuth => {
+            unsubscribe();
+            resolve(userAuth);
+        }, reject);
+    })
+};
+
 // Export this so we can call the auth whenever we want it
 export const auth = firebase.auth();
 // Export firestore so we can call it when needed

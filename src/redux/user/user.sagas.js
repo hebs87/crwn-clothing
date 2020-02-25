@@ -5,7 +5,9 @@ import UserActionTypes from './user.types';
 import {
     auth,
     googleProvider,
-    createUserProfileDocument
+    createUserProfileDocument,
+    // getCurrentUser is for user persistence
+    getCurrentUser
 } from '../../firebase/firebase.utils';
 
 import {
@@ -91,6 +93,26 @@ export function* signInWithEmail({payload: { email, password }}) {
     }
 };
 
+// This performs an API call to check whether the user is signed in
+// It uses the Promise that we created in our firebase utils
+export function* isUserAuthenticated() {
+    try {
+        // We get back the userAuth object when we call
+        // our firebase util method - it works in a similar
+        // way to the signIn methods, but instead of using
+        // the popup or email methods, it gets the userAuth
+        const userAuth = yield getCurrentUser();
+        // If the userAuth is null, we want to return out of
+        // the function
+        if (!userAuth) return;
+        // If there is a userAuth, then we want to call our
+        // getSnapshotFromUserAuth and pass in the userAuth
+        yield getSnapshotFromUserAuth(userAuth);
+    } catch (error) {
+        yield put(signInFailure(error.message))
+    }
+};
+
 // We build our onGoogleSignInStart generator function
 // which is declared using the function* syntax
 // The generator function uses the takeLatest method which
@@ -117,12 +139,20 @@ export function* onEmailSignInStart() {
     );
 };
 
-// We create a userSagas that calls our onGoogleSignInStart
-// and onEmailSignInStart sagas, so that they can be passed
-// into the root saga
+// This will be our saga that checks for the user auth
+export function* onCheckUserSession() {
+    yield takeLatest(
+        UserActionTypes.EMAIL_SIGN_IN_START,
+        isUserAuthenticated
+    )
+};
+
+// We create a userSagas that calls all of our sagas,
+// so that they can be passed into the root saga
 export function* userSagas() {
     yield all([
         call(onGoogleSignInStart),
-        call(onEmailSignInStart)
+        call(onEmailSignInStart),
+        call(isUserAuthenticated)
     ]);
 };
