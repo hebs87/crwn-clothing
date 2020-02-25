@@ -11,6 +11,8 @@ import {
 import {
     googleSignInSuccess,
     googleSignInFailure,
+    emailSignInSuccess,
+    emailSignInFailure
 } from './user.actions';
 
 export function* signInWithGoogle() {
@@ -45,6 +47,32 @@ export function* signInWithGoogle() {
     }
 };
 
+// For signing in with email, we only want our email and password
+// from our payload, so we need to destructure that in our params
+export function* signInWithEmail({payload: { email, password }}) {
+    try {
+        // Again, as with the above generator function, we want our user
+        // from the userRef object, but this time, we need to us the
+        // signInWithEmailAndPassword method instead and pass in the
+        // email and password that we've plucked from the payload
+        const { user } = yield auth.signInWithEmailAndPassword(email, password);
+        // The rest of the call will be the same as the above function,
+        // but the method that we fire in our put() is the emailSignInSuccess
+        const userRef = yield call(createUserProfileDocument, user);
+        const userSnapshot = yield userRef.get();
+        yield put(
+            emailSignInSuccess({
+                id: userSnapshot.id,
+                ...userSnapshot.data()
+            })
+        );
+    } catch (error) {
+        // If we get an error, we want to yield the put of that
+        // into our failure action and pass in the error message
+        yield put(emailSignInFailure(error.message));
+    }
+};
+
 // We build our onGoogleSignInStart generator function
 // which is declared using the function* syntax
 // The generator function uses the takeLatest method which
@@ -60,8 +88,23 @@ export function* onGoogleSignInStart() {
     );
 };
 
+// This will be our saga for the onEmailSignInStart, which will
+// be similar to the onGoogleSignInStart saga, except it will
+// be listening for the EMAIL_SIGN_IN_START action type and
+// it will trigger the signInWithEmail generator function instead
+export function* onEmailSignInStart() {
+    yield takeLatest(
+        UserActionTypes.EMAIL_SIGN_IN_START,
+        signInWithEmail
+    );
+};
+
 // We create a userSagas that calls our onGoogleSignInStart
-// saga, so that this can be passed in to the root saga
+// and onEmailSignInStart sagas, so that they can be passed
+// into the root saga
 export function* userSagas() {
-    yield all([call(onGoogleSignInStart)]);
+    yield all([
+        call(onGoogleSignInStart),
+        call(onEmailSignInStart)
+    ]);
 };

@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import FormInput from '../form-input/form-input.component'
 // Import CustomButton
 import CustomButton from '../custom-button/custom-button.component'
-// Import signInWithGoogle
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
-// Import our action
-import { googleSignInStart } from '../../redux/user/user.actions';
+// Import our actions to enable the sagas
+import {
+    googleSignInStart,
+    emailSignInStart
+} from '../../redux/user/user.actions';
 // Import styled components
 import {
     SignInContainer,
@@ -32,20 +33,16 @@ class SignIn extends React.Component {
     // We then pass this in to the form onSubmit attribute
     handleSubmit = async event => {
         event.preventDefault();
-
+        // We need to destructure the emailSignInStart from props
+        const { emailSignInStart } = this.props;
         // We need to destructure our email and password from
         // the state, so that we can use the auth's
         // signInWithEmailAndPassword method to varify the
         // details. If they are correct, we sign the user in
         const { email, password } = this.state;
-
-        try {
-            // Sign the user in if successful and then clear state
-            await auth.signInWithEmailAndPassword(email, password);
-            this.setState({ email: '', password: '' });
-        } catch (error) {
-            console.log(error);
-        }
+        // Then we call our emailSignInStart and pass in our
+        // email and password
+        emailSignInStart(email, password);
     };
 
     // When there is a change to the form fields, we want
@@ -107,7 +104,12 @@ class SignIn extends React.Component {
 };
 
 const mapDispatchToProps = dispatch => ({
-    googleSignInStart: () => dispatch(googleSignInStart())
+    googleSignInStart: () => dispatch(googleSignInStart()),
+    // In the function, we get back the email and password,
+    // which we pass into our emailSignInStart action as an
+    // object where the keys go to the values
+    emailSignInStart: (email, password) =>
+        dispatch(emailSignInStart({ email, password }))
 });
 
 export default connect(
