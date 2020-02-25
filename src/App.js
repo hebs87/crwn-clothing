@@ -20,9 +20,6 @@ import CheckoutPage from './pages/checkout/checkout.component';
 // Import Header Component
 import Header from './components/header/header.component'
 // Import auth from firebase utiils
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-// Import setCurrentUser action to enable us to set currentUser
-import { setCurrentUser } from './redux/user/user.actions';
 // Import selectors to pass into mapStateToProps
 import { selectCurrentUser } from './redux/user/user.selectors';
 
@@ -32,8 +29,6 @@ class App extends React.Component {
     unsubscribeFromAuth = null;
 
     componentDidMount() {
-        // Destructure setCurrentUser from our props
-        const {setCurrentUser} = this.props;
         // The onAuthStateChanged is a method from our auth library
         // that enables us to set the session state to the user details
         // It takes an async function in which we set the
@@ -95,21 +90,4 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser
 });
 
-// The mapDispatchToProps function takes the dispatch property
-// and returns an object where the prop name will be whatever
-// prop we want to pass in that dispatches the new action that
-// we want to pass, which in this instance is setCurrentUser
-const mapDispatchToProps = dispatch => ({
-    // setCurrentUser is the prop, but it goes to a function
-    // that gets the user object and then calls dispatch
-    // dispatch lets redux know that whatever object it is
-    // being passed is an action object that it needs to
-    // pass to every reducer
-    // So here, we call the setCurrentUser action and pass
-    // in the user that will be used as the payload
-    setCurrentUser: user => dispatch(setCurrentUser(user))
-});
-
-export default connect(
-    mapStateToProps, mapDispatchToProps
-)(App);
+export default connect(mapStateToProps)(App);
