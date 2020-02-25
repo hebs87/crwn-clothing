@@ -1,6 +1,21 @@
 // Import the action type so we can set it as the case
 import UserActionTypes from './user.types';
 
+// ------------Universal Actions------------
+// This call will get the actual current user
+// at the end of it, which will be our payload value
+export const signInSuccess = user => ({
+    type: UserActionTypes.SIGN_IN_SUCCESS,
+    payload: user
+});
+
+// This call will get the error at the end of it,
+// which will be our payload value
+export const signInFailure = error => ({
+    type: UserActionTypes.SIGN_IN_FAILURE,
+    payload: error
+});
+
 // -----------Google Sign In Actions-----------
 // This action is a function that just triggers
 // the actual sign in. It doesn't need a payload,
@@ -8,20 +23,6 @@ import UserActionTypes from './user.types';
 // to trigger our sign-in
 export const googleSignInStart = () => ({
     type: UserActionTypes.GOOGLE_SIGN_IN_START
-});
-
-// This call will get the actual current user
-// at the end of it, which will be our payload value
-export const googleSignInSuccess = user => ({
-    type: UserActionTypes.GOOGLE_SIGN_IN_SUCCESS,
-    payload: user
-});
-
-// This call will get the error at the end of it,
-// which will be our payload value
-export const googleSignInFailure = error => ({
-    type: UserActionTypes.GOOGLE_SIGN_IN_FAILURE,
-    payload: error
 });
 
 // ------------Email Sign In Actions------------
@@ -35,18 +36,4 @@ export const googleSignInFailure = error => ({
 export const emailSignInStart = emailAndPassword => ({
     type: UserActionTypes.EMAIL_SIGN_IN_START,
     payload: emailAndPassword
-});
-
-// This call will get the actual current user
-// at the end of it, which will be our payload value
-export const emailSignInSuccess = user => ({
-    type: UserActionTypes.EMAIL_SIGN_IN_SUCCESS,
-    payload: user
-});
-
-// This call will get the error at the end of it,
-// which will be our payload value
-export const emailSignInFailure = error => ({
-    type: UserActionTypes.EMAIL_SIGN_IN_FAILURE,
-    payload: error
 });

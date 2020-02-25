@@ -15,12 +15,10 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
     // Use a switch statement to check the action.type
     switch(action.type) {
-        // If the type is GOOGLE_SIGN_IN_SUCCESS or
-        // EMAIL_SIGN_IN_SUCCESS
+        // If the type is SIGN_IN_SUCCESS
         // We can stack these on top of eachother, as
         // the return statement is the same
-        case UserActionTypes.GOOGLE_SIGN_IN_SUCCESS:
-        case UserActionTypes.EMAIL_SIGN_IN_SUCCESS:
+        case UserActionTypes.SIGN_IN_SUCCESS:
             // We return a new object where we spread in
             // the state, and we update the
             // currentUser property valie to the payload
@@ -36,8 +34,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 error: null
             }
         // If there is a failure, we will show our error
-        case UserActionTypes.GOOGLE_SIGN_IN_FAILURE:
-        case UserActionTypes.EMAIL_SIGN_IN_FAILURE:
+        case UserActionTypes.SIGN_IN_FAILURE:
             return {
                 ...state,
                 error: action.payload

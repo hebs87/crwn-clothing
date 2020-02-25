@@ -9,12 +9,44 @@ import {
 } from '../../firebase/firebase.utils';
 
 import {
-    googleSignInSuccess,
-    googleSignInFailure,
-    emailSignInSuccess,
-    emailSignInFailure
+    signInSuccess,
+    signInFailure
 } from './user.actions';
 
+// This function gets the snapshot from the user auth object
+// and it will be passed into our signInWithGoogle and
+// signInWithEmail generator functions
+export function* getSnapshotFromUserAuth(userAuth) {
+    try {
+        // The userRef is what we will get back when we call our
+        // createUserProfileDocument and our user. This is the same as
+        // const userRef = await createUserProfileDocument(userAuth);
+        // that was initially in the App.js file, only it is in the
+        // form of a yield, rather than an async await
+        const userRef = yield call(createUserProfileDocument, userAuth);
+        // We get our snapshop by calling .get() on the userRef
+        const userSnapshot = yield userRef.get();
+        // We now want to issue out our success action and pass in
+        // the snapshot id and spread in the rest of the data
+        yield put(
+            signInSuccess({
+                id: userSnapshot.id,
+                ...userSnapshot.data()
+            })
+        );
+    } catch (error) {
+        // If we get an error, we want to yield the put of that
+        // into our failure action and pass in the error message
+        yield put(signInFailure(error.message));
+    }
+}
+
+// Although we will be calling our getSnapshotFromUserAuth
+// generator function that has its own try catch block, which
+// is a repitition of the one in this function, the error
+// that will be displayed here is if there is one with the
+// signInWithPopUp function instead - we want to have a try
+// catch block for any API requests
 export function* signInWithGoogle() {
     try {
         // When we sign in, we get our userRef, but we only want the
@@ -24,31 +56,24 @@ export function* signInWithGoogle() {
         // to access the object that gets returned from the success
         // of our signInWithPopup
         const { user } = yield auth.signInWithPopup(googleProvider);
-        // The userRef is now what we will get back when we call our
-        // createUserProfileDocument and our user. This is the same as
-        // const userRef = await createUserProfileDocument(userAuth);
-        // that was initially in the App.js file, only it is in the
-        // form of a yield, rather than an async await
-        const userRef = yield call(createUserProfileDocument, user);
-        // We get our snapshop by calling .get() on the userRef
-        const userSnapshot = yield userRef.get();
-        // We now want to issue out our success action and pass in
-        // the snapshot id and spread in the rest of the data
-        yield put(
-            googleSignInSuccess({
-                id: userSnapshot.id,
-                ...userSnapshot.data()
-            })
-        );
+        // We yield our getSnapshotFromUserAuth generator function
+        // and pass in the user object
+        yield getSnapshotFromUserAuth(user);
     } catch (error) {
         // If we get an error, we want to yield the put of that
         // into our failure action and pass in the error message
-        yield put(googleSignInFailure(error.message));
+        yield put(signInFailure(error.message));
     }
 };
 
 // For signing in with email, we only want our email and password
 // from our payload, so we need to destructure that in our params
+// Although we will be calling our getSnapshotFromUserAuth
+// generator function that has its own try catch block, which
+// is a repitition of the one in this function, the error
+// that will be displayed here is if there is one with the
+// signInWithEmailAndPassword function instead - we want to have
+// a try catch block for any API requests
 export function* signInWithEmail({payload: { email, password }}) {
     try {
         // Again, as with the above generator function, we want our user
@@ -56,20 +81,13 @@ export function* signInWithEmail({payload: { email, password }}) {
         // signInWithEmailAndPassword method instead and pass in the
         // email and password that we've plucked from the payload
         const { user } = yield auth.signInWithEmailAndPassword(email, password);
-        // The rest of the call will be the same as the above function,
-        // but the method that we fire in our put() is the emailSignInSuccess
-        const userRef = yield call(createUserProfileDocument, user);
-        const userSnapshot = yield userRef.get();
-        yield put(
-            emailSignInSuccess({
-                id: userSnapshot.id,
-                ...userSnapshot.data()
-            })
-        );
+        // We yield our getSnapshotFromUserAuth generator function
+        // and pass in the user object
+        yield getSnapshotFromUserAuth(user);
     } catch (error) {
         // If we get an error, we want to yield the put of that
         // into our failure action and pass in the error message
-        yield put(emailSignInFailure(error.message));
+        yield put(signInFailure(error.message));
     }
 };
 
