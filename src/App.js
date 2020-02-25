@@ -39,25 +39,25 @@ class App extends React.Component {
         // It takes an async function in which we set the
         // createUserProfileDocument param to the user object, if the
         // userAuth exists
-        this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-            if (userAuth) {
-                const userRef = await createUserProfileDocument(userAuth);
+        // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+        //     if (userAuth) {
+        //         const userRef = await createUserProfileDocument(userAuth);
                 
                 // Here, we call the onSnapshot method to get a snapshot
                 // of the user's data and we set the currentUser value to
                 // those details (user's ID and rest of the snapshot data)
-                userRef.onSnapshot(snapShot => {
-                    setCurrentUser({
-                            id: snapShot.id,
-                            ...snapShot.data()
-                        });
-                    });
-            } else {
+            //     userRef.onSnapshot(snapShot => {
+            //         setCurrentUser({
+            //                 id: snapShot.id,
+            //                 ...snapShot.data()
+            //             });
+            //         });
+            // } else {
                 // If the user logs out, we set the currentUser value
                 // back to null
-                setCurrentUser(userAuth);
-            }
-        });
+                // setCurrentUser(userAuth);
+            // }
+        // });
     }
 
     // We close the session when the component unmounts
