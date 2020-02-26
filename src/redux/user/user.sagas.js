@@ -14,20 +14,26 @@ import {
     signInSuccess,
     signInFailure,
     signOutSuccess,
-    signOutFailure
+    signOutFailure,
+    signUpSuccess
 } from './user.actions';
 
-// This function gets the snapshot from the user auth object
+// This function gets the snapshot from the userAuth object
 // and it will be passed into our signInWithGoogle and
 // signInWithEmail generator functions
-export function* getSnapshotFromUserAuth(userAuth) {
+// The second parameter will be the additionalData (displayName),
+// but it is optional. It will be passed in to the yield call for
+// our userRef - if it contains the displayName (on sign up) then
+// that will be passed in, if it is null then no value will be
+// passed in
+export function* getSnapshotFromUserAuth(userAuth, displayName) {
     try {
         // The userRef is what we will get back when we call our
         // createUserProfileDocument and our user. This is the same as
         // const userRef = await createUserProfileDocument(userAuth);
         // that was initially in the App.js file, only it is in the
         // form of a yield, rather than an async await
-        const userRef = yield call(createUserProfileDocument, userAuth);
+        const userRef = yield call(createUserProfileDocument, userAuth, displayName);
         // We get our snapshop by calling .get() on the userRef
         const userSnapshot = yield userRef.get();
         // We now want to issue out our success action and pass in
@@ -127,6 +133,42 @@ export function* signOut() {
     }
 };
 
+// This contains our sign up logic, so we need to pass in an
+// object containing the relevant information from the
+// payload - email, password and displayName
+export function* signUp({ payload: { email, password, displayName }}) {
+    try {
+        // createUserWithEmailAndPassword is a method from the auth
+        // library which create user with email address and password,
+        // and then returns the user back to us. So here, we want to
+        // destructure the user that is returned from that method -
+        // This is part of the same code that was in our SignUp component,
+        // but we just use yield instead of await
+        const { user } = yield auth.createUserWithEmailAndPassword(
+            email,
+            password
+        );
+        // If the above call is a success then we need to call our
+        // signUpSuccess and pass in an object where the user goes
+        // to user and the additionalData goes to an object containing
+        // the displayName
+        yield put(signUpSuccess({
+            user,
+            additionalData: { displayName }
+        }));
+    } catch (error) {
+
+    }
+};
+
+// This saga contains the functionality to sign the user in after
+// successful sign up. We need to get the user and additionalData
+// props from the payload, then we call our getSnapshotFromUserAuth
+// and pass the parameters into it, and that then handles our sign in
+export function* signInAfterSignUp({ payload: { user, additionalData }}) {
+    yield getSnapshotFromUserAuth(user, additionalData);
+};
+
 // We build our onGoogleSignInStart generator function
 // which is declared using the function* syntax
 // The generator function uses the takeLatest method which
@@ -169,6 +211,25 @@ export function* onSignOutStart() {
     )
 };
 
+// This will be our saga that checks for the sign up
+// and fires the action to create a new user in the
+// database
+export function* onSignUpStart() {
+    yield takeLatest(
+        UserActionTypes.SIGN_UP_START,
+        signUp
+    )
+};
+
+// This listens for the successful sign up, which
+// fires the saga that signs the user in
+export function* onSignUpSuccess() {
+    yield takeLatest(
+        UserActionTypes.SIGN_UP_SUCCESS,
+        signInAfterSignUp
+    )
+};
+
 // We create a userSagas that calls all of our sagas,
 // so that they can be passed into the root saga
 export function* userSagas() {
@@ -176,6 +237,8 @@ export function* userSagas() {
         call(onGoogleSignInStart),
         call(onEmailSignInStart),
         call(isUserAuthenticated),
-        call(onSignOutStart)
+        call(onSignOutStart),
+        call(onSignUpStart),
+        call(onSignUpSuccess)
     ]);
 };

@@ -30,7 +30,7 @@ export const googleSignInStart = () => ({
 // the actual sign in. However, the difference
 // between this and the Google one is that we
 // need to get the email and password so that
-// we can verify or add it to the database. To
+// we can verify them in the database. To
 // do this, we get the emailAndPassword and set
 // it as the payload
 export const emailSignInStart = emailAndPassword => ({
@@ -60,5 +60,39 @@ export const signOutSuccess = () => ({
 // we need to catch the error and set it to the payload
 export const signOutFailure = error => ({
     type: UserActionTypes.SIGN_OUT_FAILURE,
+    payload: error
+});
+
+// ------------Sign Up Actions------------
+// This action is a function that just triggers
+// the actual sign in. However, we need to get the
+// email, password and displayName, which we will
+// pass all three in as a userCredentials object.
+// We can then add them to the database. To do this, we
+// get the userCredentials and set them as the payload
+export const signUpStart = userCredentials => ({
+    type: UserActionTypes.SIGN_UP_START,
+    payload: userCredentials
+});
+
+// Once we get our SIGN_UP_SUCCESS call, we want to
+// succeed with the user object created from the
+// createUserWithEmailAndPassword method from our
+// firebase utils. To create it in our backend, we
+// also need to run our createUserProfileDocument
+// firebase util, into which we will pass the user
+// details (email and password) and also our displayName
+// Due to this, we will need to get both the user
+// and additionalData (displayName) and set them as
+// a payload object
+export const signUpSuccess = ({ user, additionalData }) => ({
+    type: UserActionTypes.SIGN_UP_SUCCESS,
+    payload: { user, additionalData }
+});
+
+// This action issues the sign up failure action, but
+// we need to catch the error and set it to the payload
+export const signUpFailure = error => ({
+    type: UserActionTypes.SIGN_UP_FAILURE,
     payload: error
 });
