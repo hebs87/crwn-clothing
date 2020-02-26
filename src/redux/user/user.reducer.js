@@ -16,8 +16,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
     // Use a switch statement to check the action.type
     switch(action.type) {
         // If the type is SIGN_IN_SUCCESS
-        // We can stack these on top of eachother, as
-        // the return statement is the same
         case UserActionTypes.SIGN_IN_SUCCESS:
             // We return a new object where we spread in
             // the state, and we update the
@@ -33,8 +31,21 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 currentUser: action.payload,
                 error: null
             }
-        // If there is a failure, we will show our error
+        // If the type is SIGN_OUT_SUCCESS, we return a new
+        // object where we spread in the state, and we update
+        // the currentUser and error values to null
+        case UserActionTypes.SIGN_OUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: null,
+                error: null
+            }
+        // If there is sign in/out a failure, we will show
+        // our error
+        // We can stack these on top of eachother, as
+        // the return statement is the same
         case UserActionTypes.SIGN_IN_FAILURE:
+        case UserActionTypes.SIGN_OUT_FAILURE:
             return {
                 ...state,
                 error: action.payload

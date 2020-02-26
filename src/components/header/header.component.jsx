@@ -3,14 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Import createStructured selector to allow multiple selector calls
 import { createStructuredSelector } from 'reselect';
-// Import auth from firebase utils for user authentication
-import { auth } from '../../firebase/firebase.utils'
 // Import the CartItem component
 import CartIcon from '../cart-icon/cart-icon.component';
 // Import the CartDropdown component
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 // Import selectors to pass into mapStateToProps
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+// Import signOutStart action to enable dispatching the type to the listener
+import { signOutStart } from '../../redux/user/user.actions';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 // Import SVG icon using specific React syntax
 import { ReactComponent as Logo } from '../../assets/crown.svg';
@@ -22,7 +22,7 @@ import {
     OptionLink
 } from './header.styles';
 
-const Header = ({ currentUser, hidden }) => (
+const Header = ({ currentUser, hidden, signOutStart }) => (
     <HeaderContainer>
         <LogoContainer to='/'>
             <Logo className='logo' />
@@ -46,7 +46,7 @@ const Header = ({ currentUser, hidden }) => (
                 // to specify that we want it to render as a div. If we wanted
                 // to render it as another component instead, we can use as={}
                 // and pass in the component name
-                (<OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink>)
+                (<OptionLink as='div' onClick={ signOutStart }>SIGN OUT</OptionLink>)
                 :
                 // Else, we want to display the link to take us to the signin page
                 (<OptionLink to='/signin'>SIGN IN</OptionLink>)
@@ -69,4 +69,14 @@ const mapStateToProps = createStructuredSelector({
     hidden: selectCartHidden
 });
 
-export default connect(mapStateToProps)(Header);
+// We need to create a mapDispatchToProps following our action
+// creation to enable it to be dispatched by the sign out button
+// when we move the functionality into sagas
+const mapDispatchToProps = dispatch => ({
+    signOutStart: () => dispatch(signOutStart())
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Header);

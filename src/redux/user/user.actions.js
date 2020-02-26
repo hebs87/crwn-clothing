@@ -42,3 +42,23 @@ export const emailSignInStart = emailAndPassword => ({
 export const checkUserSession = () => ({
     type: UserActionTypes.CHECK_USER_SESSION
 });
+
+// ------------Sign Out Actions------------
+// This action only issues the sign out start action,
+// so there is no payload
+export const signOutStart = () => ({
+    type: UserActionTypes.SIGN_OUT_START
+});
+
+// This action only issues the sign out success action,
+// so there is no payload
+export const signOutSuccess = () => ({
+    type: UserActionTypes.SIGN_OUT_SUCCESS
+});
+
+// This action issues the sign out failure action, but
+// we need to catch the error and set it to the payload
+export const signOutFailure = error => ({
+    type: UserActionTypes.SIGN_OUT_FAILURE,
+    payload: error
+});

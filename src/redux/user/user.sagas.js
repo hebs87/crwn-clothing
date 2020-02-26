@@ -12,7 +12,9 @@ import {
 
 import {
     signInSuccess,
-    signInFailure
+    signInFailure,
+    signOutSuccess,
+    signOutFailure
 } from './user.actions';
 
 // This function gets the snapshot from the user auth object
@@ -113,6 +115,18 @@ export function* isUserAuthenticated() {
     }
 };
 
+// This performs an API call to listen for the sign out
+// result
+export function* signOut() {
+    try {
+        // We yield the result of the auth.signOut() method
+        yield auth.signOut();
+        yield put(signOutSuccess());
+    } catch (error) {
+        yield put(signOutFailure(error.message));
+    }
+};
+
 // We build our onGoogleSignInStart generator function
 // which is declared using the function* syntax
 // The generator function uses the takeLatest method which
@@ -147,12 +161,21 @@ export function* onCheckUserSession() {
     )
 };
 
+// This will be our saga that checks for the sign out
+export function* onSignOutStart() {
+    yield takeLatest(
+        UserActionTypes.SIGN_OUT_START,
+        signOut
+    )
+};
+
 // We create a userSagas that calls all of our sagas,
 // so that they can be passed into the root saga
 export function* userSagas() {
     yield all([
         call(onGoogleSignInStart),
         call(onEmailSignInStart),
-        call(isUserAuthenticated)
+        call(isUserAuthenticated),
+        call(onSignOutStart)
     ]);
 };
