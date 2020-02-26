@@ -1,7 +1,7 @@
 // Import takeLatest to listen to every action of specific type
 // Import call to enable creating the collectionsMap
 // Import put to enable us to dispatch any actions
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 // Import relevant utilities from firebase utils
 import {
@@ -67,4 +67,12 @@ export function* fetchCollectionsStart() {
         ShopActionTypes.FETCH_COLLECTIONS_START,
         fetchCollectionsAsync
     );
+};
+
+// This is out root saga that all other sagas
+// are passed into
+export function* shopSagas() {
+    yield all([
+        call(fetchCollectionsStart)
+    ]);
 };
