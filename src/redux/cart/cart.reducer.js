@@ -48,6 +48,15 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                     cartItem.id !== action.payload.id
                 )
             };
+        // When the CLEAR_CART action type is dispatched, we
+        // return an object in which we spread in the state
+        // and clear the cart (set the cartItems value back
+        // to an empty array)
+        case CartActionTypes.CLEAR_CART:
+            return {
+                ...state,
+                cartItems: []
+            };
         default:
             return state;
     }
