@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 // Import FormInput for our form
 import FormInput from '../form-input/form-input.component';
@@ -13,26 +13,32 @@ import {
     SignUpTitle
 } from './sign-up.styles';
 
-// We want to set a state so we create a Class component
-class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
+// Now that we are using Hooks, we can convert this component
+// to a functional component, instead of a class component
+// We need to destructure the relevant props to enable passing
+// them in to the inner component
+const SignUp = ({ signUpStart }) => {
+    // We are using Hooks, so we no longer need a
+    // constructor method to set the state. Instead,
+    // we use the useState() Hook and we pass in the
+    // object containing the displayName, email, password
+    // and confirmPassword, which are all initially
+    // empty strings
+    const [userCredentials, setCredentials] = useState({
+        displayName: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
 
-        this.state = {
-            displayName: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
-        }
-    }
+    // We destructure all the props from the state
+    const { displayName, email, password, confirmPassword } = userCredentials;
 
-    handleSubmit = async event => {
+    // Now that we are using Hooks, we can convert this component
+    // to a functional component, instead of a class component
+    const handleSubmit = async event => {
         // We want to prevent the default when the form is submitted
         event.preventDefault();
-        // We need to destructure the signUpStart from our props
-        const { signUpStart } = this.props;
-        // We destructure all the props from the state
-        const { displayName, email, password, confirmPassword } = this.state;
         // If the passwords don't match, we display an alert
         if (password !== confirmPassword) {
             alert("Passwords don't match");
@@ -46,61 +52,63 @@ class SignUp extends React.Component {
     };
 
     // This is the same as the sign in method
-    handleChange = event => {
+    // This is the same as the sign in method
+    // Now that we are using Hooks, we can convert this component
+    // to a functional component, instead of a class component
+    const handleChange = event => {
         const { name, value } = event.target;
 
-        this.setState({ [name]: value });
-     }
-
-    render() {
-        // Destructure props from our state
-        const { displayName, email, password, confirmPassword } = this.state;
-
-        return(
-            <SignUpContainer>
-                <SignUpTitle>I do not have an account</SignUpTitle>
-                <span>Sign up with your email and password</span>
-
-                <form className='sign-up-form' onSubmit={this.handleSubmit}>
-                    <FormInput
-                        type='text'
-                        name='displayName'
-                        value={ displayName }
-                        handleChange={ this.handleChange }
-                        label='Display Name'
-                        required
-                    />
-                    <FormInput
-                        type='email'
-                        name='email'
-                        value={ email }
-                        handleChange={ this.handleChange }
-                        label='Email'
-                        required
-                    />
-                    <FormInput
-                        type='password'
-                        name='password'
-                        value={ password }
-                        handleChange={ this.handleChange }
-                        label='Password'
-                        required
-                    />
-                    <FormInput
-                        type='password'
-                        name='confirmPassword'
-                        value={ confirmPassword }
-                        handleChange={ this.handleChange }
-                        label='Confirm Password'
-                        required
-                    />
-
-                    <CustomButton type='submit'>SIGN UP</CustomButton>
-                </form>
-            </SignUpContainer>
-        );
+        setCredentials({
+            ...userCredentials,
+            [name]: value
+        });
     }
-}
+
+    return (
+        <SignUpContainer>
+            <SignUpTitle>I do not have an account</SignUpTitle>
+            <span>Sign up with your email and password</span>
+
+            <form className='sign-up-form' onSubmit={handleSubmit}>
+                <FormInput
+                    type='text'
+                    name='displayName'
+                    value={displayName}
+                    handleChange={handleChange}
+                    label='Display Name'
+                    required
+                />
+                <FormInput
+                    type='email'
+                    name='email'
+                    value={email}
+                    handleChange={handleChange}
+                    label='Email'
+                    required
+                />
+                <FormInput
+                    type='password'
+                    name='password'
+                    value={password}
+                    handleChange={handleChange}
+                    label='Password'
+                    required
+                />
+                <FormInput
+                    type='password'
+                    name='confirmPassword'
+                    value={confirmPassword}
+                    handleChange={handleChange}
+                    label='Confirm Password'
+                    required
+                />
+
+                <CustomButton type='submit'>SIGN UP</CustomButton>
+            </form>
+        </SignUpContainer>
+    );
+};
+
 
 // This allows us to dispatch the email, password
 // and displayName credentials to our props
