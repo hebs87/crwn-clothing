@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 // Import FormInput
 import FormInput from '../form-input/form-input.component'
@@ -16,30 +16,34 @@ import {
     ButtonsBarContainer
 } from './sign-in.styles';
 
+// Now that we are using Hooks, we can convert this component
+// to a functional component, instead of a class component
+// We need to destructure emailSignInStart & googleSignInStart
+// to enable passing them in to the inner component
+const SignIn = ({ emailSignInStart, googleSignInStart }) => {
+    // We are using Hooks, so we no longer need a
+    // constructor method to set the state. Instead,
+    // we use the useState() Hook and we pass in the
+    // object containing the email and password
+    const [userCredentials, setCredentials] = useState({
+        email: '',
+        password: ''
+    });
 
-class SignIn extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            email: '',
-            password: ''
-        }
-    }
+    // We need to destructure our email and password from
+    // userCredentials, so that we can use the auth's
+    // signInWithEmailAndPassword method to varify the
+    // details. If they are correct, we sign the user in
+    const { email, password } = userCredentials;
 
     // We want full control over what the submit will do,
     // so we use preventDefault to stop this and specify
     // what needs to be done
     // We then pass this in to the form onSubmit attribute
-    handleSubmit = async event => {
+    // As we are using Hooks to set the state, we need to
+    // make this its own function
+    const handleSubmit = async event => {
         event.preventDefault();
-        // We need to destructure the emailSignInStart from props
-        const { emailSignInStart } = this.props;
-        // We need to destructure our email and password from
-        // the state, so that we can use the auth's
-        // signInWithEmailAndPassword method to varify the
-        // details. If they are correct, we sign the user in
-        const { email, password } = this.state;
         // Then we call our emailSignInStart and pass in our
         // email and password
         emailSignInStart(email, password);
@@ -50,57 +54,61 @@ class SignIn extends React.Component {
     // is the input field itself
     // We will then dynamically set the state to the relevant
     // data, so the name will be that of the input field and
-    // the value will be its value
-    handleChange = event => {
+    // the value will be its value ()
+    // As we are using Hooks to set the state, we need to
+    // make this its own function
+    const handleChange = event => {
         const { value, name } = event.target;
-
-        this.setState({ [name]: value })
+        // To set the state, we use setCredentials from the Hook
+        // and we spread in our user credentials, and just update
+        // the value that needs to be changed
+        setCredentials({
+            ...userCredentials,
+            [name]: value
+        });
     }
 
-    render() {
-        // We need to destructure googleSignInStart from the props
-        const { googleSignInStart } = this.props;
+    // We no longer need the render method, as this is now a
+    // functional component
+    return (
+        <SignInContainer>
+            <SignInTitle>I already have an account</SignInTitle>
+            <span>Sign in with your email and password</span>
 
-        return(
-            <SignInContainer>
-                <SignInTitle>I already have an account</SignInTitle>
-                <span>Sign in with your email and password</span>
+            <form onSubmit={ handleSubmit }>
+                <FormInput
+                    name="email"
+                    type="email"
+                    value={ email }
+                    handleChange={ handleChange }
+                    label="Email"
+                    required
+                />
+                <FormInput
+                    name="password"
+                    type="password"
+                    value={ password }
+                    handleChange={ handleChange }
+                    label="Password"
+                    required
+                />
 
-                <form onSubmit={this.handleSubmit}>
-                    <FormInput
-                        name="email"
-                        type="email"
-                        value={this.state.email}
-                        handleChange={this.handleChange}
-                        label="Email"
-                        required
-                    />
-                    <FormInput
-                        name="password"
-                        type="password"
-                        value={this.state.password}
-                        handleChange={this.handleChange}
-                        label="Password"
-                        required
-                    />
-
-                    <ButtonsBarContainer>
-                        <CustomButton
-                            type='submit'
-                        >Sign In
+                <ButtonsBarContainer>
+                    <CustomButton
+                        type='submit'
+                    >Sign In
                         </CustomButton>
-                        <CustomButton
-                            type='button'
-                            onClick={ googleSignInStart }
-                            isGoogleSignIn
-                        >
-                            Sign In With Google
+                    <CustomButton
+                        type='button'
+                        onClick={googleSignInStart}
+                        isGoogleSignIn
+                    >
+                        Sign In With Google
                         </CustomButton>
-                    </ButtonsBarContainer>
-                </form>
-            </SignInContainer>
-        );
-    }
+                </ButtonsBarContainer>
+            </form>
+        </SignInContainer>
+    );
 };
 
 const mapDispatchToProps = dispatch => ({
