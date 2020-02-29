@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // Import Switch and Route to enable routing
 import { Switch, Route, Redirect } from 'react-router-dom';
 // Import connect to enable the app to access redux
@@ -25,46 +25,47 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 // import checkUserSession for user persistence (passed into dispatch)
 import { checkUserSession } from './redux/user/user.actions';
 
-class App extends React.Component {
+// Now that we are using Hooks, we can convert this component
+// to a functional component
+// Destructure the checkUserSession from mapDispatchToProps
+// Destructure the currentUser from mapStateToProps
+const App = ({ checkUserSession, currentUser }) => {
     // We set the initial unsibscribeFromAuth value to null
     // to enable us to close the session when we unmount
-    unsubscribeFromAuth = null;
 
-    componentDidMount() {
-        // Destructure the checkUserSession from mapDispatchToProps
-        const { checkUserSession } = this.props;
+    // We use the useEffect() Hook to replace the
+    // componentDidMount() method
+    useEffect(() => {
         // Instantiate checkUserSession to listen to user state
         checkUserSession();
-    }
+    // As we want this to behave as a componentDidMount() and
+    // we only want this to render when our checkUserSession
+    // value changes, we pass that prop into the array
+    }, [checkUserSession]);
 
     // We close the session when the component unmounts
-    componentWillUnmount() {
-        this.unsubscribeFromAuth();
-    }
     
-    render () {
-        return (
-            <div>
-                <Header />
-                <Switch>
-                    <Route exact path='/' component={ HomePage } />
-                    <Route path='/shop' component={ ShopPage } />
-                    <Route exact path='/checkout' component={ CheckoutPage } />
-                    <Route
-                        exact
-                        path='/signin'
-                        render={() => 
-                            this.props.currentUser ?
+    return (
+        <div>
+            <Header />
+            <Switch>
+                <Route exact path='/' component={HomePage} />
+                <Route path='/shop' component={ShopPage} />
+                <Route exact path='/checkout' component={CheckoutPage} />
+                <Route
+                    exact
+                    path='/signin'
+                    render={() =>
+                        currentUser ?
                             (<Redirect to='/' />)
                             :
                             (<SignInAndSignUp />)
-                        }
-                    />
-                </Switch>
-            </div>
-        );
-    }
-}
+                    }
+                />
+            </Switch>
+        </div>
+    );
+};
 
 // FOR REDIRECTING THE USER TO HOME PAGE IF SIGNED IN
 // We want to get our redux user state
