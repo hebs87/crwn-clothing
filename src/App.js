@@ -30,9 +30,6 @@ import { checkUserSession } from './redux/user/user.actions';
 // Destructure the checkUserSession from mapDispatchToProps
 // Destructure the currentUser from mapStateToProps
 const App = ({ checkUserSession, currentUser }) => {
-    // We set the initial unsibscribeFromAuth value to null
-    // to enable us to close the session when we unmount
-
     // We use the useEffect() Hook to replace the
     // componentDidMount() method
     useEffect(() => {
@@ -43,8 +40,6 @@ const App = ({ checkUserSession, currentUser }) => {
     // value changes, we pass that prop into the array
     }, [checkUserSession]);
 
-    // We close the session when the component unmounts
-    
     return (
         <div>
             <Header />
