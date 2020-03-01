@@ -16,6 +16,13 @@ const path = require('path');
 // our process environment 
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
+// Import stripe, which gives us back a function - the function takes
+// the secret key as the first argument. So here, we say that we want
+// to get the function that the stripe module gives us and then invoke
+// it immediately and pass it the secret key. This enables us to
+// leverage the functionality to make charges to Stripe
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 // Instantiate a new express application
 const app = express();
 
@@ -55,4 +62,46 @@ app.listen(port, error => {
     if (error) throw error;
     // This gets logged if there is no error
     console.log('Server running on port ' + port);
+});
+
+//-------------------- STRIPE PAYMENT ROUTE --------------------
+// We use the app object and declare the type of route (post in
+// this instance) and we specify the route that we want to send
+// the request to (/payment). We then pass the post method a
+// function that gets a request object (the actual token that we
+// need in order to make the charge) from the frontend, and
+// then a response from the Stripe API that we then want to send
+// back to the client on the frontend
+app.post('/payment', (req, res) => {
+    // We build the appropriate body object that we pass to
+    // Stripe using values that we get from the token - this
+    // will be the value for the req parameter
+    const body = {
+        // The source value is all the things we need from
+        // Stripe, which we can get from the token id - this
+        // is held on the body param of the req object
+        source: req.body.token.id,
+        // The amount value is the total cost of the charges
+        amount: req.body.amount,
+        // The currency value is the currency we want to use
+        currency: 'gbp'
+    };
+
+    // We call our stripe library to create a charge and pass
+    // it the body object that we previously created as the
+    // first param. The second param is a callback function
+    // in which we get the response, which will either be an
+    // error or a response (success) that we then need to send
+    // back to the client on the frontend
+    stripe.charges.create(body, (stripeErr, stripeRes) => {
+        if (stripeErr) {
+            // We want to set the response status as 500 (error)
+            // and send the actual error message to the client
+            res.status(500).send({ error: stripeErr })
+        } else {
+            // We want to set the response status as 200 (success)
+            // and send the actual response message to the client
+            res.status(200).send({ success: stripeRes })
+        }
+    });
 });
