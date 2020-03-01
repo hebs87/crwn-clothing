@@ -4,7 +4,6 @@ import StripeCheckout from 'react-stripe-checkout';
 // Import axios to enable token creation
 import axios from 'axios';
 
-
 // We create our component which renders the StripeCheckoutButton
 // which takes the price prop (this will be the total that is
 // passed in from the CheckoutPage component)
@@ -44,7 +43,7 @@ const StripeCheckoutButton = ({ price }) => {
         // success or error
         }).then(response => {
             // If it is successful, we display a success alert
-            alert('Payment successful')
+            alert('Payment successful');
         }).catch(error => {
             // If it is an error, we console log the error
             console.log('Payment error ' + JSON.parse(error));

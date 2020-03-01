@@ -28,7 +28,7 @@ const app = express();
 
 // We set the port as the process port, if there is one,
 // if there isn't then we use 5000
-const port = process.env.port || 5000;
+const port = process.env.PORT || 5000;
 
 // Use bodyParser to convert any API request data to json
 app.use(bodyParser.json());
@@ -52,7 +52,7 @@ if (process.env.NODE_ENV === 'production') {
     // client/build dir that holds the links to all the
     // node_modules that we need to run our frontend app
     app.get('*', function(req, res) {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 };
 
@@ -84,7 +84,7 @@ app.post('/payment', (req, res) => {
         // The amount value is the total cost of the charges
         amount: req.body.amount,
         // The currency value is the currency we want to use
-        currency: 'gbp'
+        currency: 'GBP'
     };
 
     // We call our stripe library to create a charge and pass
@@ -97,11 +97,11 @@ app.post('/payment', (req, res) => {
         if (stripeErr) {
             // We want to set the response status as 500 (error)
             // and send the actual error message to the client
-            res.status(500).send({ error: stripeErr })
+            res.status(500).send({ error: stripeErr });
         } else {
             // We want to set the response status as 200 (success)
             // and send the actual response message to the client
-            res.status(200).send({ success: stripeRes })
+            res.status(200).send({ success: stripeRes });
         }
     });
 });
