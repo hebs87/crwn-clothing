@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, lazy, Suspense} from 'react';
 // Import Route to enable advanced routing
-import { Route } from 'react-router-dom';
+import {Route} from 'react-router-dom';
 // Import connect to enable passing in mapDispatchToProps
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 // Import fetchCollectionsStart action to allow passing snapshot to props
-import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
+import {fetchCollectionsStart} from '../../redux/shop/shop.actions';
+import Spinner from "../../components/spinner/spinner.component";
 
-// Import CollectionsOverviewContainer
-import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
-// Import CollectionPageContainer
-import CollectionPageContainer from '../collection/collection.container';
-
+// Dynamic imports using lazy
+const CollectionsOverviewContainer = lazy(() =>
+    import('../../components/collections-overview/collections-overview.container'));
+const CollectionPageContainer = lazy(() =>
+    import('../collection/collection.container'));
 
 // This was a class component, but we've now converted it
 // to a functional component, as we are using the useEffect()
@@ -30,7 +31,7 @@ import CollectionPageContainer from '../collection/collection.container';
 // CollectionPage component
 // We need to destructure both match and fetchCollectionsStart
 // from our props
-const ShopPage = ({ fetchCollectionsStart, match }) => {
+const ShopPage = ({fetchCollectionsStart, match}) => {
     // We use the useEffect Hook to behave like a
     // componentDidMount() so that our fetchCollectionsStart
     // function is called when the component first renders
@@ -39,35 +40,37 @@ const ShopPage = ({ fetchCollectionsStart, match }) => {
         // component mounts, which then pulls in the
         // data from the reducer
         fetchCollectionsStart();
-    // If we don't pass in the second argument, the Hook
-    // will get called twice. This is because it will be
-    // dependent on the parent component (App.js). When
-    // App.js renders, it checks the user session and
-    // then re-renders if a user is logged in, as the
-    // currentUser prop value changes (initially the
-    // value us null, but then it changes to the value
-    // of the user that is logged in). This means that,
-    // on the first render, the ShopPage component will
-    // also render, and subsequently its useEffect(),
-    // then when it re-renders, the cycle repeats itself.
-    // This causes a 'second flicker' in the running app.
-    // Passing in the second argument ensures we only
-    // listen for the fetchCollectionStart prop, so the
-    // useEffect() only re-renders if the value of this
-    // prop changes
+        // If we don't pass in the second argument, the Hook
+        // will get called twice. This is because it will be
+        // dependent on the parent component (App.js). When
+        // App.js renders, it checks the user session and
+        // then re-renders if a user is logged in, as the
+        // currentUser prop value changes (initially the
+        // value us null, but then it changes to the value
+        // of the user that is logged in). This means that,
+        // on the first render, the ShopPage component will
+        // also render, and subsequently its useEffect(),
+        // then when it re-renders, the cycle repeats itself.
+        // This causes a 'second flicker' in the running app.
+        // Passing in the second argument ensures we only
+        // listen for the fetchCollectionStart prop, so the
+        // useEffect() only re-renders if the value of this
+        // prop changes
     }, [fetchCollectionsStart]);
-    
+
     return (
         <div className='shop-page'>
-            <Route
-                exact
-                path={`${match.path}`}
-                component={CollectionsOverviewContainer}
-            />
-            <Route
-                path={`${match.path}/:collectionId`}
-                component={CollectionPageContainer}
-            />
+            <Suspense fallback={<Spinner/>}>
+                <Route
+                    exact
+                    path={`${match.path}`}
+                    component={CollectionsOverviewContainer}
+                />
+                <Route
+                    path={`${match.path}/:collectionId`}
+                    component={CollectionPageContainer}
+                />
+            </Suspense>
         </div>
     )
 };
