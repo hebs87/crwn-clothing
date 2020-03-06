@@ -1,9 +1,6 @@
 import React from 'react';
-// import styled components
-import {
-    SpinnerContainer,
-    SpinnerOverlay
-} from './with-spinner.styles';
+// Import Spinner component
+import Spinner from "../spinner/spinner.component";
 
 // We declare our HOC, which is a component that
 // takes some component and returns a new functional
@@ -15,24 +12,8 @@ import {
 // gets. That component then renders either the spinner,
 // depending on our isLoading prop, or the
 // WrappedComponent with all the other props
-const WithSpinner = WrappedComponent => {
-    // We create our Spinner component and render the
-    // logic in it
-    const Spinner = ({ isLoading, ...otherProps }) => {
-        return isLoading ? (
-            <SpinnerOverlay>
-                <SpinnerContainer />
-            </SpinnerOverlay>
-        ) : (
-            <WrappedComponent { ...otherProps } />
-        )
-    };
-    // We need to return the Spinner component here,
-    // that way if we want to use the spinner, we use
-    // it in the same way as the WrappedComponent,
-    // but we pass it the isLoading prop and declare
-    // the boolean value for the component
-    return Spinner;
+const WithSpinner = WrappedComponent => ({isLoading, ...otherProps}) => {
+    return isLoading ? <Spinner/> : <WrappedComponent {...otherProps}/>;
 };
 
 export default WithSpinner;
