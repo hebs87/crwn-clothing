@@ -18,6 +18,8 @@ import {selectCurrentUser} from './redux/user/user.selectors';
 // import checkUserSession for user persistence (passed into dispatch)
 import {checkUserSession} from './redux/user/user.actions';
 import Spinner from "./components/spinner/spinner.component";
+// Import ErrorBoundary to catch errors
+import ErrorBoundary from "./components/error-boundary/error-boundary.component";
 
 // Lazy import all components rendered in the Route components
 // to enable code-splitting - they will only load when needed
@@ -55,26 +57,30 @@ const App = ({checkUserSession, currentUser}) => {
     // Routes being lazy loaded. This takes a fallback property,
     // which in our case is the Spinner component, which is shown
     // while the actual desired component is being rendered
+    // We also wrap our Suspense in the ErrorBoundary, which will
+    // catch any errors thrown by any of its children components
     return (
         <div>
             <GlobalStyle/>
             <Header/>
             <Switch>
-                <Suspense fallback={<Spinner/>}>
-                    <Route exact path='/' component={HomePage}/>
-                    <Route path='/shop' component={ShopPage}/>
-                    <Route exact path='/checkout' component={CheckoutPage}/>
-                    <Route
-                        exact
-                        path='/signin'
-                        render={() =>
-                            currentUser ?
-                                (<Redirect to='/'/>)
-                                :
-                                (<SignInAndSignUp/>)
-                        }
-                    />
-                </Suspense>
+                <ErrorBoundary>
+                    <Suspense fallback={<Spinner/>}>
+                        <Route exact path='/' component={HomePage}/>
+                        <Route path='/shop' component={ShopPage}/>
+                        <Route exact path='/checkout' component={CheckoutPage}/>
+                        <Route
+                            exact
+                            path='/signin'
+                            render={() =>
+                                currentUser ?
+                                    (<Redirect to='/'/>)
+                                    :
+                                    (<SignInAndSignUp/>)
+                            }
+                        />
+                    </Suspense>
+                </ErrorBoundary>
             </Switch>
         </div>
     );
