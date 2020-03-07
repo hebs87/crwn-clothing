@@ -11,6 +11,9 @@ const bodyParser = require('body-parser');
 // Import path - native node module that lets us
 // dynamically build specific paths
 const path = require('path');
+// Import compression to enable gzipping when deploying
+// project to Heroku
+const compression = require('compression');
 
 // If we're in production, this loads our .env into
 // our process environment 
@@ -30,6 +33,8 @@ const app = express();
 // if there isn't then we use 5000
 const port = process.env.PORT || 5000;
 
+// Use compression to enable gzipping when deploying app to Heroku
+app.use(compression());
 // Use bodyParser to convert any API request data to json
 app.use(bodyParser.json());
 // Use bodyParser to encode any url strings, so they don't
