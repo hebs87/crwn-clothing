@@ -10,6 +10,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 // Import store and persistor so we can pass it in to our Provider
 import { store, persistor } from './redux/store';
+// Import service worker to make app a PWA
+import * as serviceWorker from './serviceWorker';
 
 // We need to wrap our App Component with the BrowserRouter
 // This gives the App the routing functionality
@@ -23,3 +25,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
+
+serviceWorker.register();

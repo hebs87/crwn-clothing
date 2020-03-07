@@ -14,6 +14,9 @@ const path = require('path');
 // Import compression to enable gzipping when deploying
 // project to Heroku
 const compression = require('compression');
+// Call enforce, which is what we get back from sslify
+// to force any HTTP requests to HTTPS instead
+const enforce = require('express-sslify');
 
 // If we're in production, this loads our .env into
 // our process environment 
@@ -40,6 +43,8 @@ app.use(bodyParser.json());
 // Use bodyParser to encode any url strings, so they don't
 // contain any illegal characters
 app.use(bodyParser.urlencoded({ extended: true }));
+// Enforce HTTPS for our app, if the user tries HTTP
+app.use(enforce.HTTPS({trustProtoHeader: true}));
 
 // Enable cors so that our frontend can speak to our backend
 // which are both on different ports
@@ -67,6 +72,14 @@ app.listen(port, error => {
     if (error) throw error;
     // This gets logged if there is no error
     console.log('Server running on port ' + port);
+});
+
+// When our app makes a request for service worker (for a PWA),
+// we want to resolve it by giving it the path to the serviceWorker
+// file in the client/build dir, so we say .. to go up a level,
+// then into the build dir and get the relevant file
+app.get('/service-worker.js', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
 });
 
 //-------------------- STRIPE PAYMENT ROUTE --------------------
